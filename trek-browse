@@ -1,0 +1,5 @@
+#!/bin/bash
+# Browse the Star Trek Graph corpus without an API key.
+# Shows character stats, top lines, episode info — purely from Neo4j.
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$DIR/.venv/bin/python" "$DIR/src/browse.py" "$@"

@@ -33,20 +33,32 @@ Plus a `canon_tier` property on every Episode (1=aired, 4=community, 5=AU).
 - [x] Cross-platform: Linux / macOS / Windows launchers + install scripts
 - [x] ARCHITECTURE.md, AGENTS.md, ONTOLOGY.md full documentation
 
-### Phase 2 — GraphRAG Layer ✅ COMPLETE
+### Phase 2 — GraphRAG Layer ✅ COMPLETE (v0.1.0–v0.2.0)
 - [x] `src/embedder.py` — Neo4j → Qdrant with full graph metadata as payload
 - [x] `src/retriever.py` — semantic search + Neo4j graph expansion (2-phase retrieval)
 - [x] `src/character_agent.py` — GraphRAG chatbot, ~3.5k tokens/turn vs 500k+
 - [x] `src/device_utils.py` — auto-detects CUDA / MPS / CPU across platforms
-- [x] **TOS ingest** — chakoteya.net transcript parser
-  (`src/tos_parser.py`), fetcher (`scripts/fetch_tos.py`), orchestrator
-  (`scripts/ingest_tos.py`). 79 TOS episodes (80 transcripts with
-  Menagerie Pt 2) loaded as `series="TOS"`, 29,352 lines, 472 new
-  characters. Top speakers: Kirk, Spock, McCoy.
-- [ ] TOS embeddings — feed TOS lines through `embedder.py` into the
-  existing `trek_lines` Qdrant collection (next step).
-- [ ] Location normalization — `data/location_aliases.yaml` (after DS9 decision)
-- [ ] Validate: test character agents across full corpus
+- [x] **TOS ingest** — chakoteya.net transcript parser + 80 episodes loaded
+- [x] **TOS embeddings** — 29,316 lines embedded with `--series` filter
+- [x] Combined Qdrant collection: 99,161 points across both series
+- [x] Cross-series agent: `--series` flag, dedicated `kirk` launcher
+- [x] End-to-end validation: docs/VALIDATION.md
+  (Picard + Kirk both pass retrieval, voice, and out-of-canon refusal tests)
+
+### Phase 2.5 — Pre-Promotion Polish (next, before Reddit)
+- [ ] Add a demo (asciinema or screenshot in README) so Reddit visitors
+      see what they're getting before they install anything
+- [ ] No-API-key "tire kicker" mode — let people browse the graph
+      without an Anthropic key (e.g. `./trek-browse PICARD` shows top
+      lines, episode list, co-stars from Neo4j only)
+- [x] **DS9 ingest** — 173 screenplays (IDs 402–575, minus the missing
+      473) parsed with the existing TNG screenplay parser and loaded
+      as `series="DS9"`. +72,268 dialogue lines. Top speakers:
+      Sisko, Kira, Bashir, O'Brien, Quark, Odo, Dax, Worf, Jake, Garak.
+      Combined graph: 429 episodes across TNG+TOS+DS9.
+      Embeddings to follow in a separate embedder pass.
+- [ ] Location normalization — `data/location_aliases.yaml`
+      (BRIDGE / MAIN BRIDGE / ENTERPRISE BRIDGE → one Setting+Place pair)
 
 ### Phase 3 — Behavioral Models (Layer 2)
 - Claude-generated behavioral cards for top 20 characters

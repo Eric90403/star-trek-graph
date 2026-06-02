@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added — DS9 (Deep Space Nine) corpus
+- DS9 scraper (`scripts/fetch_ds9.py`) — polite fetcher for the
+  st-minutiae.com screenplay archive (IDs 402–575, skipping the
+  missing 473 = "Tears of the Prophets Pt II"). 1.0s delay between
+  requests, identifying User-Agent, idempotent skip-existing.
+  Saves to `data/raw/ds9_{N}.txt` to avoid collision with TNG's
+  bare-numeric raw filenames.
+- DS9 ingest orchestrator (`scripts/ingest_ds9.py`) — mirrors
+  `ingest_tng.py` with `--parse-only` / `--load-only` flags.
+  Reuses `src/parser.py` unchanged (DS9 scripts share the TNG
+  screenplay format) and injects `series="DS9"` into each parsed
+  JSON before persisting / loading. Episode IDs are the bare source
+  numbers (402–575) — no collision with TNG (102–277) or TOS
+  (`tos:*` namespace).
+- Test fixture (`tests/test_ds9_parse.py`) — 4 assertions on
+  episode 402 ("Emissary", the DS9 pilot): title contains
+  "Emissary", core cast (SISKO, KIRA, ODO, BASHIR) present, at
+  least 200 dialogue lines parsed, series tag = "DS9".
+
+### Corpus growth
+- +173 DS9 screenplays (all 7 seasons; only "Tears of the Prophets
+  Pt II" is absent from the st-minutiae archive).
+- +72,268 DS9 dialogue lines.
+- 0 parse failures, 0 thin episodes (<50 lines), 0 load errors.
+- Top DS9 speakers: Sisko (9,296), Kira (5,723), Bashir (5,464),
+  O'Brien (5,208), Quark (5,103), Odo (4,982), Dax (4,120),
+  Worf (2,172), Jake (1,601), Garak (1,590).
+- TNG and TOS corpora untouched (still 176 and 80 episodes).
+- Combined graph now: 429 episodes across TNG + TOS + DS9.
+
+### Notes
+- `src/parser.py` and `src/loader.py` were not modified — the
+  existing TNG parser handles DS9 verbatim and the loader is
+  series-agnostic.
+- Qdrant embeddings for DS9 lines will be produced in a follow-up
+  embedder run; this changeset only covers Layer-1 graph ingest.
+
 ## [0.2.0] — 2026-06-02
 
 The Kirk Update. Adds The Original Series (TOS), cross-series GraphRAG,
