@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Raw script files (large, freely available from st-minutiae.com — don't commit)
+data/raw/
+
+# Parsed JSON (derived from raw — regenerate with spike.sh)
+data/parsed/
+
+# Environment / secrets
+.env
+*.env
+
+# Neo4j local data (lives in Docker volumes)
+neo4j_data/
+neo4j_logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
