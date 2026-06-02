@@ -60,20 +60,33 @@ Plus a `canon_tier` property on every Episode (1=aired, 4=community, 5=AU).
 - [ ] Location normalization — `data/location_aliases.yaml`
       (BRIDGE / MAIN BRIDGE / ENTERPRISE BRIDGE → one Setting+Place pair)
 
-### Phase 3 — Behavioral Models (Layer 2)
-- Claude-generated behavioral cards for top 20 characters
-- RAG-backed character chatbot API (FastAPI)
-- Simple web UI
+### Phase 3 — Behavioral Models (Layer 2) ✅ COMPLETE
+- [x] `src/behavioral_extractor.py` — Claude-derived behavioral cards
+- [x] `scripts/build_behavioral_cards.py` — orchestrator with idempotent runs
+- [x] Generated `BehavioralCard` nodes for top 20 characters
+  (core_identity, driving_question, speech_patterns, decision_heuristics,
+  hard_limits, signature_phrases, emotional_range, intellectual_style)
+- [x] Retriever wires cards into the system prompt (`HAS_BEHAVIORAL_CARD` edge)
+- [x] Total cost: ~$1 with Sonnet-4.5
 
-### Phase 4 — Narrative Grammar (Layer 3)
-- Trope catalog (manual seed + Claude enrichment)
-- Beat templates per series
-- Conflict topology with tension decay
+### Phase 4 — Narrative Grammar (deferred)
+- Phase 5 (Episode Writer) shipped without needing this layer.
+  Tropes / beat templates / theme catalogs would be polish, not foundation.
+  Revisit if generated episodes start feeling formulaic.
 
-### Phase 5 — Episode Writer (the headline feature)
-- Multi-agent writer's room (Outliner → Writers → Director → Canon Validator)
-- Pi-Agent-style harness fork
-- Output proper screenplay format
+### Phase 5 — Episode Writer ✅ COMPLETE (the headline feature)
+- [x] `src/episode_writer.py` — four-agent writer's room
+  - Showrunner (Opus) writes outline as JSON
+  - Canon Validator (Sonnet) flags continuity / character violations
+  - Scene Writers (Opus, one per scene) write each scene with
+    full BehavioralCard + retrieved canon lines for every character present
+  - Director (Sonnet) emits structural metadata only; Python stitches
+    the final teleplay without ever truncating scene content
+- [x] `./write-episode` / `./write-episode.bat` launchers
+- [x] Two sample episodes committed to the repo
+  - `SAMPLE_TNG_The_Last_Voice_of_Kethani.txt` — TNG, 50k chars
+  - `SAMPLE_TOS_The_Blood_of_Kahless.txt` — TOS, 49k chars
+- [x] Cost per episode: ~$1.20–$1.75 at Opus pricing
 
 ### Phase 6 — Community Layer
 - User-submitted generated episodes

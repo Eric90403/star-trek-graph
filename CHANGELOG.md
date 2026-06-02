@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] — 2026-06-02
+
+The Writers' Room. Adds Deep Space Nine, a no-API-key browse mode,
+Phase 3 Behavioral Cards, and the headline feature: a multi-agent
+Episode Writer that generates full canon-faithful Star Trek teleplays.
 
 ### Added — DS9 (Deep Space Nine) corpus
 - DS9 scraper (`scripts/fetch_ds9.py`) — polite fetcher for the
@@ -41,8 +45,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/parser.py` and `src/loader.py` were not modified — the
   existing TNG parser handles DS9 verbatim and the loader is
   series-agnostic.
-- Qdrant embeddings for DS9 lines will be produced in a follow-up
-  embedder run; this changeset only covers Layer-1 graph ingest.
+
+### Added — Tire-kicker browse mode (no API key required)
+- `src/browse.py` and `./trek-browse` launcher (+ `.bat`).
+- Renders horizontal-bar charts of character line counts, scene partners,
+  episode breakdowns, and word-wrapped longest speeches — all from Neo4j
+  alone, zero LLM cost.
+- Lets people poke at the corpus before committing to Anthropic setup.
+
+### Added — Behavioral Cards (Phase 3, Layer 2)
+- `src/behavioral_extractor.py` — stratified sampling + Claude extraction.
+- `scripts/build_behavioral_cards.py` — idempotent orchestrator.
+- 20 character `BehavioralCard` nodes created via claude-sonnet-4-5
+  for ~$1 total. Each card records core_identity, driving_question,
+  speech_patterns, decision_heuristics, hard_limits, signature_phrases,
+  emotional_range, intellectual_style.
+- `HAS_BEHAVIORAL_CARD` edge links Character → BehavioralCard.
+- `src/retriever.py` now pulls the card into the system prompt
+  alongside the retrieved canon dialogue — agents get both a derived
+  character bible AND raw canonical examples.
+
+### Added — Episode Writer (Phase 5, the headline feature)
+- `src/episode_writer.py` — four-agent multi-step pipeline:
+  1. **Showrunner** (Opus) writes an outline as structured JSON
+  2. **Canon Validator** (Sonnet) flags continuity violations against
+     the BehavioralCards and series tonal profile
+  3. **Scene Writers** (Opus, one per scene) each receive the
+     BehavioralCard and a seed of retrieved canon lines for every
+     character in their scene
+  4. **Director** (Sonnet) emits structural metadata (act breaks, teaser
+     voiceover, tag scene) — Python then deterministically stitches
+     the final teleplay, GUARANTEEING no scene content is ever truncated
+- `./write-episode` and `./write-episode.bat` launchers.
+- Sample episodes committed to the repo:
+  - `data/generated_episodes/SAMPLE_TNG_The_Last_Voice_of_Kethani.txt`
+    (50,078 chars — preserved alien consciousness moral dilemma)
+  - `data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt`
+    (48,595 chars — Federation colony adopts Klingon practices)
+- Cost: ~$1.20–$1.75 per episode at Opus/Sonnet pricing.
+- `.gitignore` keeps user-generated episodes private but ships the SAMPLE_*.
+
+### Corpus stats at end of v0.3.0
+- TOS:  80 episodes (incl. Menagerie Pt 2 split), 29,316 lines, 472 chars
+- TNG: 176 episodes, 70,544 lines, 2,143 characters
+- DS9: 173 episodes, 72,160 lines, ~1,000 characters
+- **Combined: 429 episodes, ~172,000 lines, ~3,000 characters**
+- BehavioralCards: 20 (top characters by line count)
 
 ## [0.2.0] — 2026-06-02
 

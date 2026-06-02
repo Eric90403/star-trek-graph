@@ -13,16 +13,17 @@
 [![CI](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml/badge.svg)](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Version 0.2.0](https://img.shields.io/badge/version-0.2.0-green.svg)](CHANGELOG.md)
+[![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-green.svg)](CHANGELOG.md)
 [![Built with Hermes Agent](https://img.shields.io/badge/built%20with-Hermes%20Agent-blueviolet)](https://hermes-agent.nousresearch.com)
 
 > "The sky's the limit." — Jean-Luc Picard, *All Good Things...*
 
 A knowledge graph of every line ever spoken in *Star Trek: The Original
-Series* and *Star Trek: The Next Generation* — 256 episodes, 99,860 lines,
-2,567 characters — powering GraphRAG-grounded
-character chatbots and an AI episode writer, all running locally for $0 in
-embedding costs.
+Series*, *Star Trek: The Next Generation*, and *Star Trek: Deep Space
+Nine* — 429 episodes, ~172,000 dialogue lines — powering GraphRAG-grounded
+character chatbots and a multi-agent **Episode Writer** that generates
+brand-new canon-faithful teleplays. All running locally, with embeddings
+at $0 cost.
 
 **Created with [Hermes Agent](https://hermes-agent.nousresearch.com) on Ubuntu
 (kernel 7.0.0-15-generic)**
@@ -40,9 +41,10 @@ Three things in one repo:
 
 | Component | What it does |
 |-----------|-------------|
-| **Knowledge Graph** | All 176 TNG + 80 TOS episodes loaded into Neo4j. Episodes, scenes, lines, characters, locations, ships — all connected. |
-| **Character Chatbots** | Talk to Picard, Kirk, Spock, Worf, Data, or any of 2,567 characters. The LLM is grounded *exclusively* in canon dialogue — no hallucinated backstory. |
-| **Episode Writer** *(Phase 5)* | Multi-agent writer's room where character agents collaborate to draft new canon-faithful episodes. |
+| **Knowledge Graph** | 176 TNG + 80 TOS + 173 DS9 episodes loaded into Neo4j. Episodes, scenes, lines, characters, locations, ships — all connected. |
+| **Character Chatbots** | Talk to Picard, Kirk, Sisko, Spock, Worf, Data, Quark, or any of ~3,000 characters. The LLM is grounded *exclusively* in canon dialogue + extracted behavioral cards — no hallucinated backstory. |
+| **Episode Writer** | Multi-agent writer's room (Showrunner → Canon Validator → Scene Writers → Director) that generates full canon-faithful teleplays from a one-sentence premise. Two sample episodes ship in `data/generated_episodes/`. |
+| **Browse Mode** | `./trek-browse` — explore the corpus stats, character relationships, and longest speeches without an API key. |
 
 The trick is **GraphRAG** (Retrieval-Augmented Generation from a graph):
 instead of dumping 500,000 tokens of dialogue into the context window,
@@ -170,6 +172,46 @@ efficient, accurate, and it scales to any character in the corpus.
 
 Every character responds from canon dialogue only. If you ask Worf about something
 not in the graph, he'll tell you he has no record of it. That's the point.
+
+### `./trek-browse` — No API key required
+
+```
+./trek-browse                         Corpus overview + top characters
+./trek-browse PICARD                  Character detail (lines, partners, top quotes)
+./trek-browse SISKO --series DS9
+./trek-browse --episode tos:42        Episode detail (cast, notable lines)
+```
+
+Renders horizontal-bar charts straight from Neo4j. Great for poking
+at the corpus before you commit to setting up an Anthropic key.
+
+### `./write-episode` — Multi-agent Episode Writer
+
+Generates a full canon-faithful teleplay from a single premise.
+Four agents collaborate: a Showrunner outlines, a Canon Validator
+flags continuity issues, Scene Writers (one per scene) draft the
+dialogue using each character's Behavioral Card and a fresh
+retrieval of canon lines, and a Director assembles the final teleplay
+with act structure, teaser narration, and a tag scene.
+
+```bash
+./write-episode \
+    --premise "Picard discovers a derelict ship containing the only
+               surviving consciousness of an extinct civilization,
+               who pleads to be uploaded into the ship's computer..." \
+    --series TNG \
+    --characters PICARD,RIKER,DATA,WORF,TROI,BEVERLY \
+    --scenes 5
+```
+
+Cost: ~$1.20–$1.75 per episode (Opus for creative passes,
+Sonnet for validation and metadata). The teleplay and a JSON
+sidecar with the full outline+metadata are saved to
+`data/generated_episodes/`.
+
+**Two sample episodes ship in the repo:**
+- [`SAMPLE_TNG_The_Last_Voice_of_Kethani.txt`](data/generated_episodes/SAMPLE_TNG_The_Last_Voice_of_Kethani.txt) — 50,078 chars
+- [`SAMPLE_TOS_The_Blood_of_Kahless.txt`](data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt) — 48,595 chars
 
 ### Ingest scripts
 
@@ -316,9 +358,9 @@ Full schema spec: `docs/ONTOLOGY.md`
 
 | Source | Episodes | Lines | Characters | Status |
 |--------|----------|-------|------------|--------|
-| TOS (all 3 seasons) | 80  | 29,316  | 472   | ✅ loaded |
-| TNG (all 7 seasons) | 176 | 70,544  | 2,143 | ✅ loaded |
-| DS9 (all 7 seasons) | 176 | —       | —     | Phase 3+ |
+| TOS (all 3 seasons) | 80  | 29,316  | 472   | ✅ loaded + embedded |
+| TNG (all 7 seasons) | 176 | 70,544  | 2,143 | ✅ loaded + embedded |
+| DS9 (all 7 seasons) | 173 | 72,160  | ~1,000 | ✅ loaded (embedding in progress) |
 | TNG Films | 4 | — | — | Phase 3+ |
 | Voyager | 172 | — | — | Phase 4+ |
 
