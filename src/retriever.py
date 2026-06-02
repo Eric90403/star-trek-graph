@@ -166,7 +166,10 @@ class Retriever:
     # ── Character card ───────────────────────────────────────────────────────
 
     def get_character_card(self, character: str) -> dict:
-        """Compact, mostly-static facts about a character — loaded once."""
+        """Compact, mostly-static facts about a character — loaded once.
+
+        Includes the BehavioralCard (Layer 2) if one exists.
+        """
         name = character.upper()
         with self.driver.session() as session:
             char_node = session.run(
@@ -193,13 +196,22 @@ class Retriever:
                 RETURN collect(costar) AS costars
             """, name=name).single()
 
+            behavioral_card = session.run("""
+                MATCH (c:Character {canonical_name: $name})
+                      -[:HAS_BEHAVIORAL_CARD]->(bc:BehavioralCard)
+                RETURN bc
+            """, name=name).single()
+
+        bc = dict(behavioral_card["bc"]) if behavioral_card else {}
+
         return {
-            "canonical_name": name,
-            "properties":     dict(char_node["c"]) if char_node else {},
-            "total_lines":    (stats["line_count"]    if stats else 0) or 0,
-            "total_episodes": (stats["episode_count"] if stats else 0) or 0,
-            "top_costars":    (costars["costars"] if costars else []) or [],
-            "series":         "TNG",
+            "canonical_name":   name,
+            "properties":       dict(char_node["c"]) if char_node else {},
+            "total_lines":      (stats["line_count"]    if stats else 0) or 0,
+            "total_episodes":   (stats["episode_count"] if stats else 0) or 0,
+            "top_costars":      (costars["costars"] if costars else []) or [],
+            "behavioral_card":  bc,
+            "series":           "TNG",
         }
 
     # ── Full retrieval ───────────────────────────────────────────────────────
@@ -243,6 +255,50 @@ def _format_prompt_block(character: str, card: dict,
         if v and k != "canonical_name":
             card_lines.append(f"{k}: {v}")
 
+    # Behavioral card (Layer 2) — if present, this is the main voice driver
+    bc = card.get("behavioral_card") or {}
+    bc_lines: list[str] = []
+    if bc:
+        import json as _json
+
+        def _decode(field: str) -> list:
+            # Card list-fields are stored as `<field>_json` (JSON-encoded strings)
+            v = bc.get(field + "_json") or bc.get(field, "")
+            if not v:
+                return []
+            try:
+                return _json.loads(v) if isinstance(v, str) else list(v)
+            except Exception:
+                return [v]
+
+        bc_lines.append("")
+        bc_lines.append("BEHAVIORAL PROFILE (derived from your own dialogue):")
+        if bc.get("core_identity"):
+            bc_lines.append(f"\nCore identity: {bc['core_identity']}")
+        if bc.get("driving_question"):
+            bc_lines.append(f"\nDriving question: {bc['driving_question']}")
+
+        for label, field in [
+            ("Speech patterns",     "speech_patterns"),
+            ("Decision heuristics", "decision_heuristics"),
+            ("Hard limits",         "hard_limits"),
+        ]:
+            items = _decode(field)
+            if items:
+                bc_lines.append(f"\n{label}:")
+                for it in items:
+                    bc_lines.append(f"  • {it}")
+
+        sigs = _decode("signature_phrases")
+        if sigs:
+            bc_lines.append(f"\nSignature phrases: " +
+                            ", ".join(f'"{s}"' for s in sigs[:12]))
+
+        if bc.get("emotional_range"):
+            bc_lines.append(f"\nEmotional range: {bc['emotional_range']}")
+        if bc.get("intellectual_style"):
+            bc_lines.append(f"\nIntellectual style: {bc['intellectual_style']}")
+
     rel_lines = ["", "Top relationships (by shared scenes):"]
     for r in graph_ctx["top_relationships"]:
         rel_lines.append(f"  {r['partner']}: {r['total_shared_scenes']} shared scenes")
@@ -264,7 +320,7 @@ def _format_prompt_block(character: str, card: dict,
                   if l.get("other_speakers") else "")
         dialogue_lines.append(f"  {name.upper()}{paren}: {l['text']}{others}")
 
-    return "\n".join(card_lines + rel_lines + dialogue_lines)
+    return "\n".join(card_lines + bc_lines + rel_lines + dialogue_lines)
 
 
 # ── CLI smoke test ────────────────────────────────────────────────────────────
