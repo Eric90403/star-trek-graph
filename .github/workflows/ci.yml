@@ -29,15 +29,32 @@ jobs:
           python -m pip install neo4j qdrant-client httpx beautifulsoup4 pydantic tqdm
 
       - name: Syntax check all Python files
+        shell: python {0}
         run: |
-          python -m py_compile src/*.py scripts/*.py tests/*.py
+          import py_compile, pathlib, sys
+          failures = []
+          for d in ("src", "scripts", "tests"):
+              for p in pathlib.Path(d).rglob("*.py"):
+                  try:
+                      py_compile.compile(str(p), doraise=True)
+                  except py_compile.PyCompileError as e:
+                      failures.append(f"{p}: {e}")
+          if failures:
+              print("\n".join(failures))
+              sys.exit(1)
+          print("All Python files compiled cleanly.")
 
       - name: Import smoke test (modules without heavy deps)
-        run: |
-          python -c "import sys; sys.path.insert(0, 'src'); import config, auth"
+        shell: python {0}
         env:
-          # auth.py raises if no key is set — provide a fake one for import-only test
           ANTHROPIC_API_KEY: sk-ant-fake-ci-key
+        run: |
+          import sys, pathlib
+          sys.path.insert(0, str(pathlib.Path("src").resolve()))
+          import config
+          import auth
+          print(f"config.__version__ = {config.__version__}")
+          print(f"auth.get_api_key() returns key with prefix: {auth.get_api_key()[:7]}...")
 
       - name: Parser unit test
         run: |
