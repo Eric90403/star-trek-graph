@@ -1,5 +1,19 @@
 # Star Trek Graph
 
+```
+       _____________________
+      /__(========/ = _------,---,--,--._
+              \    /__,-'             '-._--._
+               \  /  ,-.--.                '--._
+                \/  /  /   \                   '-,
+                ||  /  /    \________,_______----'
+                | `-'        _,'/ | |\
+                |  ____  \  /   |_| `,___.--._
+                 `(____  `,                   `.
+                   `--._'  \  |                .'
+                         `--'  |________________|
+```
+
 [![CI](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml/badge.svg)](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
