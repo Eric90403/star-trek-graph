@@ -264,7 +264,7 @@ ssh -L 7475:localhost:7475 -L 7688:localhost:7688 user@host
 |-----------------|----------|---------|------------|----------------|
 | TNG (all 7 seasons) | 176  | 70,544  | 2,143      | ✅ loaded + embedded |
 | TOS (all 3 seasons) | 80 (incl. Menagerie Pt 2 split) | 29,316 | 472 | ✅ loaded + embedded |
-| DS9 (all 7 seasons) | 176  | —       | —          | 📋 Phase 3+   |
+| DS9 (all 7 seasons) | 173 (gap at ID 473) | 72,160 | ~1,000 | ✅ loaded + embedded |
 | TNG Films           | 4    | —       | —          | 📋 Phase 2+   |
 | Voyager (partial)   | 7    | —       | —          | 📋 Phase 3+   |
 

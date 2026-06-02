@@ -150,3 +150,37 @@ exist as distinct Character nodes in the same graph.
 | Per-turn generation | Anthropic API | 5-10 s | Opus model |
 
 On a CUDA-capable machine, embedding times drop by ~10-50×.
+
+---
+
+## Episode Writer (v0.3.0)
+
+Generated two sample episodes end-to-end:
+
+### "The Last Voice of Kethani" (TNG)
+- Premise: derelict ship contains uploaded consciousness of extinct civilization
+- 5 scenes + teaser + 3 acts + tag = 50,078 chars
+- Cost: $1.72 (29,130 input + 17,173 output tokens)
+- Notable: Canon Validator referenced "Measure of a Man," "Schizoid Man,"
+  "Lonely Among Us," "11001001" as relevant precedents — actual TNG canon
+- Closing tag scene: "the act of remembering defines us as much as what
+  is remembered" — proper TNG philosophical button
+- Saved to `data/generated_episodes/SAMPLE_TNG_*.txt`
+
+### "The Blood of Kahless" (TOS)
+- Premise: Federation colony adopting Klingon practices, diplomatic crisis
+- 5 scenes + teaser + 3 acts + tag = 48,595 chars
+- Cost: $1.26 (14,202 input + 13,917 output tokens)
+- Notable: Validator flagged that the original premise's "Klingon religious
+  tradition" (Kahless worship, Sto-vo-kor) is TNG-era retcon, not TOS
+  canon — recommended reframing the conflict as territorial/political
+- Saved to `data/generated_episodes/SAMPLE_TOS_*.txt`
+
+### Bug found and fixed during validation
+The Director was originally Opus-regenerating the entire teleplay with
+max_tokens=3000, silently truncating ~70% of the scene content. Fixed
+by making the Director emit structural metadata only (act_breaks, teaser
+voiceover, tag scene) and having Python do deterministic stitching.
+Scene texts now land verbatim in the final output.
+
+### Verdict: ✅ Episode Writer produces canon-faithful teleplays

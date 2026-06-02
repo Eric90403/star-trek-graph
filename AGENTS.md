@@ -36,20 +36,30 @@ star-trek-graph/
 │   └── PLAN.md                ← phased roadmap with status
 │
 ├── scripts/
-│   ├── fetch_scripts.py       ← scrape TNG scripts from st-minutiae.com
-│   ├── ingest_tng.py          ← orchestrates fetch → parse → load
+│   ├── fetch_scripts.py       ← TNG scraper (st-minutiae IDs 102-277)
+│   ├── fetch_tos.py           ← TOS scraper (chakoteya transcripts)
+│   ├── fetch_ds9.py           ← DS9 scraper (st-minutiae IDs 402-575)
+│   ├── ingest_tng.py          ← orchestrators per series — fetch + parse + load
+│   ├── ingest_tos.py
+│   ├── ingest_ds9.py
+│   ├── build_behavioral_cards.py ← Phase 3 character cards
+│   ├── audit_parse_quality.py ← parser health report
 │   └── sample_queries.cypher  ← Neo4j Browser exploration queries
 │
 ├── src/
 │   ├── __init__.py
-│   ├── config.py              ← centralised config + TREK_* env var support + __version__
+│   ├── config.py              ← centralised config + TREK_* env vars + __version__
 │   ├── auth.py                ← cross-platform API key resolver
 │   ├── device_utils.py        ← auto-detects CUDA/MPS/CPU
-│   ├── parser.py              ← screenplay → structured JSON
-│   ├── loader.py              ← JSON → Neo4j (MERGE-based, idempotent)
-│   ├── embedder.py            ← Neo4j → Qdrant (graph metadata as payload)
-│   ├── retriever.py           ← GraphRAG: vector search + Neo4j expansion
-│   └── character_agent.py     ← GraphRAG character chatbot (the main agent)
+│   ├── parser.py              ← TNG/DS9 screenplay parser
+│   ├── tos_parser.py          ← TOS HTML transcript parser
+│   ├── loader.py              ← JSON → Neo4j (MERGE, idempotent, series-agnostic)
+│   ├── embedder.py            ← Neo4j → Qdrant (with --series flag)
+│   ├── retriever.py           ← GraphRAG: vector search + Neo4j expansion + BehavioralCard
+│   ├── character_agent.py     ← GraphRAG character chatbot (the main agent)
+│   ├── browse.py              ← no-API-key tire-kicker viewer
+│   ├── behavioral_extractor.py← Phase 3 card extraction logic
+│   └── episode_writer.py      ← Phase 5 multi-agent writer's room
 │
 ├── data/
 │   ├── raw/                   ← .gitignored — fetched .txt scripts
@@ -196,16 +206,36 @@ Do NOT add a normalization pass until the full corpus decision is made
 
 ---
 
-## Current Corpus State (v0.2.0)
+## Current Corpus State (v0.3.0)
 
-TNG: 176 episodes, 70,544 lines, 2,143 characters — fully loaded in Neo4j and Qdrant.
-TOS: 80 episodes (79 + Menagerie Pt 2 = `tos:16b`), 29,316 lines, 472 characters
-  — fully loaded as `series="TOS"`, `source_type="transcript"`,
-  IDs namespaced `tos:<prod_num>`. Embeddings live in the same Qdrant collection.
-Qdrant: 99,161 points in `trek_lines` (TNG + TOS combined).
-Top TNG speakers: Picard (13,763), Riker (7,941), Data (6,837).
-Top TOS speakers: Kirk (9,324), Spock (4,593), McCoy (2,571).
-Both agents validated end-to-end (see `docs/VALIDATION.md`).
+TNG: 176 episodes, 70,544 lines, 2,143 characters — loaded in Neo4j + Qdrant.
+TOS: 80 episodes (incl. Menagerie Pt 2 = `tos:16b`), 29,316 lines, 472 chars
+  — `series="TOS"`, `source_type="transcript"`, IDs `tos:<N>`. Embedded.
+DS9: 173 episodes (gap at ID 473), 72,160 lines, ~1,000 characters
+  — `series="DS9"`, screenplay format, bare ID. Embedded.
+Combined Qdrant collection `trek_lines`: ~170k embedded points.
+BehavioralCards: 20 (top characters by line count) with
+  `(Character)-[:HAS_BEHAVIORAL_CARD]->(BehavioralCard)` edges.
+Top all-series speakers: Picard (13,786), Kirk (9,324), Sisko (9,296),
+  Riker (8,034), Data (6,837), Worf (6,268).
+Both character agents (Picard, Kirk) AND the Episode Writer validated
+end-to-end (see `docs/VALIDATION.md`).
+
+## Episode Writer (Phase 5)
+
+`src/episode_writer.py` is a 4-agent pipeline:
+  Showrunner (Opus) → Canon Validator (Sonnet) → Scene Writers (Opus,
+  one per scene) → Director (Sonnet, metadata-only) → Python stitching.
+
+Why Python stitching: an early version had the Director regenerate the
+whole teleplay as Opus output. With max_tokens=3000 it silently truncated
+~70% of the content. Fixed by making the Director emit structural
+metadata (act_breaks, teaser_voiceover, tag_scene) and doing the
+stitching deterministically in Python. The scene texts are now
+GUARANTEED to land in the final output verbatim.
+
+Sample episodes in `data/generated_episodes/SAMPLE_*.txt` (kept in git;
+all other generated episodes are gitignored).
 
 ---
 
