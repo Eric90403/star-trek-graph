@@ -24,19 +24,26 @@ Plus a `canon_tier` property on every Episode (1=aired, 4=community, 5=AU).
 
 ## Phases
 
-### Phase 1 — Spike (this milestone)
+### Phase 1 — Spike ✅ COMPLETE
 - [x] Project skeleton + docker-compose
-- [ ] Scrape 5 TNG scripts from st-minutiae.com
-- [ ] Parser: scripts → structured JSON (acts, scenes, dialogue, stage directions)
-- [ ] Loader: JSON → Neo4j (Layer 1 only)
-- [ ] Sample Cypher queries proving the schema works
-- [ ] Neo4j Browser bookmarks for exploration
+- [x] Scrape 5 TNG scripts, parser, loader, sample queries
+- [x] Neo4j Layer 1 schema validated
+- [x] picard_agent.py — graph-grounded character chatbot (full-context version)
+- [x] GitHub repo: https://github.com/Eric90403/star-trek-graph
 
-### Phase 2 — Full Corpus + Enrichment
-- Scrape all available series (TOS, TNG, DS9, VOY, ENT)
-- NER pass to extract ships, species, locations, tech mentions
-- Quote node creation + embeddings into Qdrant
-- Bi-temporal CharacterState modeling
+### Phase 1.5 — Full TNG Ingest ✅ COMPLETE
+- [x] All 176 TNG episodes fetched and loaded (IDs 102–277)
+- [x] 70,544 lines, 2,143 characters, 8,813 scenes in Neo4j
+- [x] Top character: Picard 13,763 lines
+- [x] ARCHITECTURE.md, AGENTS.md, PLAN.md updated
+
+### Phase 2 — GraphRAG Layer (next)
+- [ ] `src/embedder.py` — pull all lines from Neo4j with graph metadata,
+      embed with nomic-embed-text-v1.5 (local, $0), push to Qdrant `trek_lines`
+- [ ] `src/retriever.py` — semantic search + Neo4j graph expansion
+- [ ] `src/character_agent.py` — replace full-context dump with GraphRAG retrieval
+- [ ] Location normalization — `data/location_aliases.yaml` + re-load after full corpus decision
+- [ ] Validate: ask Picard questions, confirm answers are graph-grounded
 
 ### Phase 3 — Behavioral Models (Layer 2)
 - Claude-generated behavioral cards for top 20 characters

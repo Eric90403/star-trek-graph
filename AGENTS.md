@@ -1,0 +1,201 @@
+# Star Trek Graph — Agent & Contributor Guide
+
+## For AI Agents (Hermes, Claude Code, Codex, etc.)
+
+Load this file before working on the project. It tells you where
+everything lives, what conventions to follow, and what not to break.
+
+---
+
+## Project Purpose
+
+A generative Star Trek knowledge graph powering:
+1. Character chatbots grounded exclusively in canon dialogue
+2. A multi-agent Episode Writer that generates new episodes
+3. Community fan-canon with tier-based validation
+
+**Key principle:** The LLMs are grounded by the graph, not by training
+data. Never let a character agent answer from general knowledge — it must
+retrieve from Neo4j/Qdrant and stay within those bounds.
+
+---
+
+## Repository Layout
+
+```
+star-trek-graph/
+├── AGENTS.md                  ← you are here
+├── README.md                  ← user-facing quickstart
+├── docker-compose.yml         ← trek-neo4j container
+├── picard                     ← launcher script (no venv activation needed)
+├── requirements.txt           ← pinned deps
+│
+├── docs/
+│   ├── ARCHITECTURE.md        ← full system design, GraphRAG pattern
+│   ├── ONTOLOGY.md            ← five-layer graph schema spec
+│   └── PLAN.md                ← phased roadmap with status
+│
+├── scripts/
+│   ├── fetch_scripts.py       ← scrape TNG scripts from st-minutiae.com
+│   ├── ingest_tng.py          ← orchestrates fetch → parse → load
+│   ├── spike.sh               ← original 5-episode spike runner
+│   └── sample_queries.cypher  ← Neo4j Browser exploration queries
+│
+├── src/
+│   ├── parser.py              ← screenplay → structured JSON
+│   ├── loader.py              ← JSON → Neo4j (MERGE-based, idempotent)
+│   ├── picard_agent.py        ← Phase 1 character agent (full context)
+│   ├── embedder.py            ← (Phase 2) Neo4j → Qdrant embeddings
+│   ├── retriever.py           ← (Phase 2) GraphRAG retrieval
+│   └── character_agent.py     ← (Phase 2) GraphRAG character chatbot
+│
+├── data/
+│   ├── raw/                   ← .gitignored — fetched .txt scripts
+│   └── parsed/                ← .gitignored — parsed .json files
+│
+└── tests/
+    └── test_parser.py
+```
+
+---
+
+## Infrastructure
+
+| Service | Container | Ports | Credentials |
+|---------|-----------|-------|-------------|
+| Trek Neo4j | trek-neo4j | HTTP: 7475, Bolt: 7688 | neo4j / trekgraph |
+| Qdrant | tmf-qdrant | 6333 | shared with TMF project |
+
+Trek Neo4j starts with: `docker compose up -d` from project root.
+Qdrant is already running as a persistent container — do not restart it.
+Use Qdrant collection `trek_lines` for this project (not `tmf_*`).
+
+---
+
+## Python Environment
+
+Always use the project venv:
+```bash
+source .venv/bin/activate
+# or use the launcher: ./picard
+```
+
+Python 3.11 (pydantic-core won't build on 3.14 yet as of 2026).
+`pip install -r requirements.txt` to install all deps.
+
+---
+
+## Embedding Model
+
+**nomic-ai/nomic-embed-text-v1.5** — local, already cached, $0 cost.
+
+```python
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('nomic-ai/nomic-embed-text-v1.5',
+                             trust_remote_code=True)
+# IMPORTANT: prefix "search_document: " on ingest
+#            prefix "search_query: "    at query time
+vecs = model.encode(["search_document: " + text])
+```
+
+Do NOT use OpenAI or Anthropic embeddings — we have a perfectly good
+local model. Do NOT commit model weights to git.
+
+---
+
+## Neo4j Query Conventions
+
+- Use `size()` not `length()` for string/list length in Neo4j 5+
+- All writes use `MERGE` (not `CREATE`) — the pipeline is idempotent
+- Unique constraints exist on: Episode.id, Character.canonical_name,
+  Ship.name, Location.name
+- Bolt port is 7688 (not default 7687) to avoid collision with tmf-neo4j
+
+```python
+from neo4j import GraphDatabase
+driver = GraphDatabase.driver("bolt://localhost:7688",
+                              auth=("neo4j", "trekgraph"))
+```
+
+---
+
+## The GraphRAG Retrieval Pattern
+
+This is the core of the character agent. See docs/ARCHITECTURE.md for
+the full design. The short version:
+
+1. Embed the user query with `"search_query: " + message`
+2. Search Qdrant collection `trek_lines` filtered by `speaker=CHARACTER`
+3. Take top 40 results — they include graph metadata as payload
+4. Expand via Neo4j: pull episode context and co-character relationships
+5. Assemble a ~3.5k token context block
+6. Pass to claude-opus for generation
+
+Never dump the full character dialogue into context. It doesn't scale.
+
+---
+
+## Canon Tiers
+
+Every Episode node has `canon_tier`:
+- 1 = Aired canon
+- 4 = Community-generated content
+- 5 = Explicit AU / non-canon
+
+Always filter to `canon_tier = 1` by default in character agent queries.
+Only include higher tiers if the user explicitly requests it.
+
+---
+
+## Location Normalization (TODO — Phase 2)
+
+Location nodes are currently raw scene headings — noisy and un-normalized.
+Example: BRIDGE, MAIN BRIDGE, ENTERPRISE BRIDGE are all the same place.
+
+Do NOT add a normalization pass until the full corpus decision is made
+(TNG only vs. all series). The normalization vocabulary lives in
+`data/location_aliases.yaml` (not yet created).
+
+---
+
+## LLM Usage Guidelines
+
+| Task | Model | Reason |
+|------|-------|--------|
+| Character voice generation | claude-opus | Voice fidelity |
+| Canon arbitration | claude-opus | Reasoning depth |
+| Episode outlining | claude-sonnet | Cheaper, fast iteration |
+| Behavioral card generation | claude-sonnet | Bulk, one-time |
+| Embeddings | nomic-embed-text-v1.5 (local) | $0, already cached |
+| Bulk data enrichment | claude-haiku | Cost efficiency |
+
+---
+
+## What NOT to Do
+
+- Do not use `python3` bare — always use `.venv/bin/python` or activate first
+- Do not commit `data/raw/` or `data/parsed/` — they are gitignored
+- Do not commit model weights
+- Do not use `length()` on strings in Cypher (use `size()`)
+- Do not let character agents answer from training data — retrieval only
+- Do not restart the tmf-qdrant container — it's shared infrastructure
+- Do not add DS9/VOY/Films until TNG GraphRAG is validated end-to-end
+
+---
+
+## Current Corpus State
+
+TNG: 176 episodes, 70,544 lines, 2,143 characters — fully loaded in Neo4j.
+Embeddings: not yet built (Phase 2).
+Top characters: Picard (13,763 lines), Riker (7,941), Data (6,837).
+
+---
+
+## Hermes-Specific Notes
+
+The Hermes skill for this project pattern is saved as:
+`~/.hermes/skills/data-science/screenplay-graph-spike/SKILL.md`
+
+When asked to work on this project, load AGENTS.md first, then load
+the relevant src/ file you're editing. The docs/ folder is authoritative
+on architecture decisions — check it before designing new components.
