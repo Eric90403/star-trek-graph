@@ -90,13 +90,18 @@ Python 3.11 (pydantic-core won't build on 3.14 yet as of 2026).
 **nomic-ai/nomic-embed-text-v1.5** — local, already cached, $0 cost.
 
 ```python
+import os; os.environ["CUDA_VISIBLE_DEVICES"] = ""  # REQUIRED — P2000 CUDA arch mismatch
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('nomic-ai/nomic-embed-text-v1.5',
-                             trust_remote_code=True)
+                             trust_remote_code=True, device="cpu")
 # IMPORTANT: prefix "search_document: " on ingest
 #            prefix "search_query: "    at query time
 vecs = model.encode(["search_document: " + text])
 ```
+
+ALWAYS set CUDA_VISIBLE_DEVICES="" before loading — the P2000 GPU has a
+CUDA architecture mismatch with the installed PyTorch build. CPU runs at
+~165 lines/sec, which is fine for all practical purposes.
 
 Do NOT use OpenAI or Anthropic embeddings — we have a perfectly good
 local model. Do NOT commit model weights to git.
