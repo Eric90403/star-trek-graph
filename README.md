@@ -214,6 +214,31 @@ sidecar with the full outline+metadata are saved to
 - [`SAMPLE_TOS_The_Blood_of_Kahless.txt`](data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt) — TOS, 48,595 chars
 - [`SAMPLE_DS9_Sins_of_the_Father.txt`](data/generated_episodes/SAMPLE_DS9_Sins_of_the_Father.txt) — DS9, 42,544 chars
 
+### `src/comic/` — Comic book rendering platform (preview)
+
+A separate pipeline that turns generated teleplays into proper comic
+book pages. Produces panel art via image generation, applies a
+post-processing chain (posterization + line overlay + halftone + grain)
+so the output reads as printed comic rather than AI painting, and lays
+out professional balloons:
+
+- Pure-white rounded-rect speech balloons with curved tapered tails
+- Double-outline radio balloons with zig-zag tails for combadge / viewscreen / intercom (Star Trek convention)
+- Cyan italic caption boxes for Captain's Log entries (IDW Trek convention)
+- ALL CAPS body text in Komika Text (free comic font, ships with the repo)
+- Bangers display font for titles and sound effects
+- Professional grid-based page layouts (4-, 6-, 9-panel; splash; varying tier)
+
+Designed against the conventions documented in
+[`docs/COMIC_PRODUCTION.md`](docs/COMIC_PRODUCTION.md) — Blambot's
+industry-standard grammar reference, IDW Star Trek comics, comic
+printer specs.
+
+A POC page from the TNG sample episode is in the repo:
+[`data/poc_comic/SAMPLE_TNG_The_Last_Voice_of_Kethani_PAGE_1.png`](data/poc_comic/SAMPLE_TNG_The_Last_Voice_of_Kethani_PAGE_1.png).
+
+Full multi-page generation + PDF/CBZ export is the v0.5.0 target.
+
 ### Ingest scripts
 
 ```bash
