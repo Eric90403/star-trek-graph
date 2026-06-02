@@ -35,3 +35,10 @@ data/behavioral_cards/
 # Generated episodes — keep the sample, ignore the rest
 data/generated_episodes/*
 !data/generated_episodes/SAMPLE_*
+
+# Comic POC working files (keep the SAMPLE, ignore experiments)
+data/poc_comic/page1*.png
+data/poc_comic/panels/
+data/poc_comic/panels_v2/
+data/poc_comic/page1_plan.json
+!data/poc_comic/SAMPLE_*
