@@ -38,6 +38,13 @@ Plus a `canon_tier` property on every Episode (1=aired, 4=community, 5=AU).
 - [x] `src/retriever.py` — semantic search + Neo4j graph expansion (2-phase retrieval)
 - [x] `src/character_agent.py` — GraphRAG chatbot, ~3.5k tokens/turn vs 500k+
 - [x] `src/device_utils.py` — auto-detects CUDA / MPS / CPU across platforms
+- [x] **TOS ingest** — chakoteya.net transcript parser
+  (`src/tos_parser.py`), fetcher (`scripts/fetch_tos.py`), orchestrator
+  (`scripts/ingest_tos.py`). 79 TOS episodes (80 transcripts with
+  Menagerie Pt 2) loaded as `series="TOS"`, 29,352 lines, 472 new
+  characters. Top speakers: Kirk, Spock, McCoy.
+- [ ] TOS embeddings — feed TOS lines through `embedder.py` into the
+  existing `trek_lines` Qdrant collection (next step).
 - [ ] Location normalization — `data/location_aliases.yaml` (after DS9 decision)
 - [ ] Validate: test character agents across full corpus
 

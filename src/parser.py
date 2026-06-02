@@ -51,6 +51,13 @@ RE_PARENTHETICAL = re.compile(r"^\s*\((?P<text>[^)]+)\)\s*$")
 RE_BLANK = re.compile(r"^\s*$")
 
 RE_TITLE = re.compile(r'"([^"]+)"')
+# Fallback: title appears on its own line after the series header, before
+# the production code. Captures the title for scripts that don't quote it.
+# Pattern: STAR TREK: THE NEXT GENERATION \n <whitespace> <TITLE> \n <whitespace> #PROD-CODE
+RE_TITLE_UNQUOTED = re.compile(
+    r"STAR\s+TREK[^\n]*\n+\s*([^\n#]+?)\s*\n+\s*#\d{5}-\d{3}",
+    re.IGNORECASE,
+)
 RE_STARDATE = re.compile(r"stardate\s+([0-9]+\.?[0-9]*)", re.IGNORECASE)
 RE_WRITTEN_BY = re.compile(r"(?:Written by|by)\s*\n+\s*([^\n#]+)", re.IGNORECASE)
 RE_PROD = re.compile(r"#?(\d{5})-(\d{3})")  # e.g. 40277-747
@@ -139,8 +146,29 @@ def _split_location(heading: str) -> tuple[str | None, str | None]:
 
 def _extract_header_meta(text: str, ps: ParsedScript) -> None:
     head = text[:3000]
-    if m := RE_TITLE.search(head):
-        ps.title = m.group(1).strip()
+
+    # Title extraction — try in order:
+    #   1. Unquoted title between series header and production code (most reliable)
+    #   2. Single-line quoted title (older scripts, but careful — many titles
+    #      contain nested quotes like "Hide And 'Q'")
+    title = None
+    if m := RE_TITLE_UNQUOTED.search(head):
+        title = m.group(1).strip()
+    if not title:
+        if m := RE_TITLE.search(head):
+            cand = m.group(1).strip()
+            # Reject obvious non-titles (production code fragments, etc.)
+            if cand and not cand.isdigit() and 2 <= len(cand) <= 60:
+                title = cand
+    if title:
+        # Final sanity: collapse internal whitespace, strip noise
+        # (incl. leading/trailing quote marks of any flavour)
+        title = re.sub(r"\s+", " ", title).strip(' .-—"\'“”‘’')
+        if title and not any(junk in title.upper()
+                              for junk in ("WRITTEN BY", "DIRECTED BY",
+                                           "COPYRIGHT", "DRAFT")):
+            ps.title = title
+
     if m := RE_PROD.search(head):
         ps.production_code = f"{m.group(1)}-{m.group(2)}"
     # writer

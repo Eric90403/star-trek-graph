@@ -89,8 +89,14 @@ class Retriever:
     # ── Vector search ────────────────────────────────────────────────────────
 
     def search_lines(self, speaker: str, query: str,
-                     top_k: int = DEFAULT_TOP_K) -> list[dict]:
-        """Semantic search over a character's lines, filtered by speaker."""
+                     top_k: int = DEFAULT_TOP_K,
+                     series: str | None = None) -> list[dict]:
+        """Semantic search over a character's lines, filtered by speaker.
+
+        Optional `series` filter restricts results to one show (e.g. "TNG",
+        "TOS"). Useful for characters that appear in multiple series — but
+        for now Kirk/Spock/McCoy are TOS-only, Picard is TNG-only, etc.
+        """
         vec = self.model.encode(
             [QUERY_PREFIX + query],
             normalize_embeddings=True,
@@ -99,6 +105,9 @@ class Retriever:
 
         must = [FieldCondition(key="speaker",
                                match=MatchValue(value=speaker.upper()))]
+        if series:
+            must.append(FieldCondition(key="series",
+                                       match=MatchValue(value=series.upper())))
 
         # query_points is the modern API; search() is deprecated in 1.18+
         result = self.qclient.query_points(
@@ -196,10 +205,14 @@ class Retriever:
     # ── Full retrieval ───────────────────────────────────────────────────────
 
     def retrieve(self, character: str, query: str,
-                 top_k: int = DEFAULT_TOP_K) -> dict:
+                 top_k: int = DEFAULT_TOP_K,
+                 series: str | None = None) -> dict:
         """Return retrieved lines, graph context, character card, and a
-        ready-to-use prompt_block string for the agent's system prompt."""
-        lines = self.search_lines(character, query, top_k=top_k)
+        ready-to-use prompt_block string for the agent's system prompt.
+
+        If `series` is provided (e.g. "TNG", "TOS"), retrieval is scoped
+        to lines from that series only."""
+        lines = self.search_lines(character, query, top_k=top_k, series=series)
         episode_ids = list(dict.fromkeys(l["episode_id"] for l in lines))
         graph_ctx = self.expand_episodes(episode_ids, character)
         card = self.get_character_card(character)

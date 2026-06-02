@@ -1,0 +1,4 @@
+#!/bin/bash
+# Talk to Kirk (alias for: ./trek --character KIRK --series TOS)
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$DIR/.venv/bin/python" "$DIR/src/character_agent.py" --character KIRK --series TOS "$@"

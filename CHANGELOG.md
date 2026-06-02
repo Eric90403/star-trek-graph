@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added — TOS (The Original Series) corpus
+- TOS transcript parser (`src/tos_parser.py`) — BeautifulSoup-based HTML
+  parser for chakoteya.net transcripts. Handles `[Location]` scene
+  markers, `SPEAKER:` / `SPEAKER [OC]:` cues, mid-paragraph stage
+  directions in parens, and bare-paragraph "Captain's Log" narration
+  (attributed to KIRK with `parenthetical="Log"`).
+- TOS scraper (`scripts/fetch_tos.py`) — polite (1.5s delay,
+  identifying User-Agent), idempotent, handles the `16b` Menagerie
+  Part 2 oddball production code.
+- TOS ingest orchestrator (`scripts/ingest_tos.py`) — mirrors
+  `ingest_tng.py` with `--parse-only` / `--load-only` flags. Writes
+  parsed JSON to `data/parsed/tos_*.json`.
+- Test fixture (`tests/test_tos_parser.py`) — 7 assertions on
+  "The Trouble With Tribbles" covering title, namespaced ID,
+  metadata, core characters, line count, Captain's Log attribution,
+  and scene location extraction.
+- Episode-level `series: "TOS"` and `source_type: "transcript"` fields
+  so downstream consumers can distinguish transcript vs. screenplay
+  provenance (TNG remains `source_type` unset / screenplay).
+- Episode IDs namespaced as `tos:<prod_num>` (e.g. `tos:42`,
+  `tos:16b`) to avoid collision with TNG's bare-int IDs.
+
+### Corpus growth
+- +80 transcripts (79 broadcast episodes; The Menagerie Parts 1+2
+  ship as `tos:16` and `tos:16b`).
+- +29,352 TOS dialogue lines.
+- +3,096 TOS scenes.
+- +472 new TOS characters (total now 2,567 across TNG+TOS).
+- Top TOS speakers: Kirk (9,324), Spock (4,593), McCoy (2,571),
+  Scott (1,382), Sulu (784), Uhura (752), Chekov (474).
+- TNG corpus unchanged: still 176 episodes, 70,544 lines.
+
+### Notes
+- `src/parser.py` (TNG screenplay parser) and `src/loader.py` were
+  not modified — the TOS parser emits the same JSON schema so the
+  existing loader handles both series.
+- Embeddings for TOS lines will be added in a follow-up `embedder.py`
+  run; this changeset only covers Layer-1 graph ingest.
+
 ## [0.1.0] — 2026-06-01
 
 First public release. Functional end-to-end pipeline from raw scripts to

@@ -71,6 +71,7 @@ RETURN
     e.title                       AS episode_title,
     e.stardate                    AS stardate,
     e.canon_tier                  AS canon_tier,
+    coalesce(e.series, 'UNKNOWN') AS series,
     s.scene_num                   AS scene_num,
     coalesce(loc.name, 'UNKNOWN') AS location,
     others                        AS other_speakers
@@ -143,7 +144,7 @@ def row_to_payload(row: dict) -> dict:
         "scene_num":      row["scene_num"],
         "location":       row["location"],
         "other_speakers": row["other_speakers"] or [],
-        "series":         "TNG",
+        "series":         row.get("series") or "UNKNOWN",
     }
 
 

@@ -263,9 +263,15 @@ ssh -L 7475:localhost:7475 -L 7688:localhost:7688 user@host
 | Source          | Episodes | Lines   | Characters | Status         |
 |-----------------|----------|---------|------------|----------------|
 | TNG (all 7 seasons) | 176  | 70,544  | 2,143      | ✅ loaded      |
+| TOS (all 3 seasons) | 79 (80 transcripts incl. Menagerie Pt 2) | 29,352 | 472 | ✅ loaded |
 | DS9 (all 7 seasons) | 176  | —       | —          | 📋 Phase 2+   |
 | TNG Films           | 4    | —       | —          | 📋 Phase 2+   |
 | Voyager (partial)   | 7    | —       | —          | 📋 Phase 3+   |
+
+TOS lines come from chakoteya.net transcripts (HTML), not screenplays;
+episode JSON carries `source_type: "transcript"` to distinguish.
+Episode IDs are namespaced (`tos:42`) so they cannot collide with TNG's
+bare-int IDs.
 
 ---
 

@@ -38,7 +38,7 @@ from config import (                                                  # noqa: E4
 
 # ── System prompt ─────────────────────────────────────────────────────────────
 
-SYSTEM_TEMPLATE = """You are {name}, a character from Star Trek: The Next Generation.
+SYSTEM_TEMPLATE = """You are {name}, a character from Star Trek ({series}).
 
 CRITICAL INSTRUCTION — GRAPH-GROUNDED ONLY:
 You must answer EXCLUSIVELY from the dialogue records and context provided below.
@@ -161,10 +161,13 @@ def chat(args: argparse.Namespace) -> int:
                 last_assistant = history[-1]["content"]
                 retrieval_query = f"{last_assistant[:200]} {user_input}"
 
-            ctx = retriever.retrieve(character, retrieval_query, top_k=args.top_k)
+            ctx = retriever.retrieve(character, retrieval_query,
+                                     top_k=args.top_k,
+                                     series=args.series)
 
             system = SYSTEM_TEMPLATE.format(
                 name=name,
+                series=args.series or "the canon corpus",
                 context_block=ctx["prompt_block"],
                 total_lines=card["total_lines"],
             )
@@ -209,6 +212,9 @@ def main() -> int:
                     help="Character canonical name (default: PICARD)")
     ap.add_argument("--top-k", type=int, default=DEFAULT_TOP_K,
                     help=f"Lines retrieved per turn (default: {DEFAULT_TOP_K})")
+    ap.add_argument("--series", default=None,
+                    help="Restrict retrieval to one series: TNG, TOS, etc. "
+                         "Default: any series (useful when characters span shows).")
     ap.add_argument("--model", default=DEFAULT_LLM_MODEL,
                     help=f"Anthropic model id (default: {DEFAULT_LLM_MODEL}). "
                          "Use claude-sonnet-4-5 for faster/cheaper responses.")
