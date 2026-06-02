@@ -384,19 +384,36 @@ See `docs/PLAN.md` for the full phased roadmap with status. The short version:
 
 ## Contributing
 
-Pull requests welcome. Before you open one:
+PRs welcome! Star Trek nerds with software chops are exactly the people
+this project needs. The workflow:
 
-1. Read `AGENTS.md` — it's written for both humans and AI agents.
-2. Read `docs/ARCHITECTURE.md` — architecture decisions are documented there
-   and aren't meant to be relitigated lightly.
-3. Don't commit `data/raw/` or `data/parsed/` — they're gitignored and
-   scraped data from st-minutiae.com is not ours to redistribute.
-4. Don't add DS9/VOY until TNG GraphRAG is validated end-to-end. The graph
-   schema will evolve when we do multi-series.
-5. Run the test suite: `.venv/bin/python -m pytest tests/`
+1. **Fork** the repo (button at top-right of the GitHub page)
+2. **Clone your fork**, create a branch (`git checkout -b my-feature`)
+3. **Read** `AGENTS.md` and `CONTRIBUTING.md` — they explain conventions
+4. **Make your changes**, commit, push to your fork
+5. **Open a Pull Request** against `Eric90403/star-trek-graph:main`
+6. CI will auto-run (Linux + macOS + Windows × Python 3.11/3.12)
+7. We discuss, iterate if needed, then merge
 
-Ideas especially welcome in: location normalization, behavioral card generation,
-and the Episode Writer architecture.
+For larger changes (new corpora, schema changes, anything touching the
+Episode Writer architecture), **please open an Issue first** so we can
+align on approach before you sink time into it.
+
+`main` is protected: PRs require CI to pass and at least one review.
+The repo owner retains bypass for solo housekeeping (doc tweaks,
+version bumps); contributor work goes through PRs. This isn't
+gatekeeping — it's how we keep the release artifacts (sample episodes,
+embedded corpus, validated agents) honest and reproducible.
+
+Ideas especially welcome:
+- Voyager / Enterprise / TNG Films ingest
+- Location normalization (`data/location_aliases.yaml`)
+- Behavioral cards for more characters
+- Local-LLM mode for the Episode Writer (Ollama / vLLM)
+- A web UI
+- Telegram / Discord bot wrappers
+
+See `CONTRIBUTING.md` for the full guide.
 
 ---
 

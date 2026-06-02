@@ -6,10 +6,12 @@ software, you'll fit right in.
 
 ## Ways to help
 
-**Ingest new corpora.** DS9 scripts are all available on st-minutiae.com
-in the 400-series numbering. TNG films, partial VOY, and ENT pilots are
-also there. Each new series only needs a tiny tweak to `scripts/fetch_*.py`
-to pull. The parser is series-agnostic.
+**Ingest new corpora.** TOS and DS9 are loaded as of v0.3.0.
+**Voyager** is the obvious next target — chakoteya.net has complete
+VOY transcripts in the same HTML format as TOS, so the existing
+`src/tos_parser.py` can be adapted. The 4 **TNG Films** are also
+available on st-minutiae.com in the same format as the TNG series
+(would extend the Picard agent with film-era dialogue).
 
 **Normalise locations.** The graph currently has BRIDGE, MAIN BRIDGE,
 and ENTERPRISE BRIDGE as separate Location nodes. We need a
@@ -17,19 +19,29 @@ and ENTERPRISE BRIDGE as separate Location nodes. We need a
 canonical (Setting, Place, Region) triple. See the open TODO in
 `docs/ONTOLOGY.md`.
 
-**Build behavioral cards** (Layer 2). For the top ~30 characters, use
-the retrieved-dialogue corpus to draft `BehavioralCard` nodes — speech
-patterns, decision heuristics, hard limits. This is Phase 3 in
-`docs/PLAN.md`.
+**Generate more behavioral cards.** v0.3.0 ships 20 cards for the top
+characters. Extending to the next 30-40 characters (Garak's full
+arc, Dukat, Q, Lwaxana, Barclay, Ro) would noticeably improve
+Episode Writer voice quality for those agents. The orchestrator
+(`scripts/build_behavioral_cards.py`) is idempotent — just add
+to the top-N list and re-run.
 
-**Improve the parser.** Edge cases exist. If you find an episode that
-parses thin (< 50 lines), that's a parser bug — open an issue with the
-script ID and we'll fix the state machine.
+**Improve the Episode Writer.** Some ideas:
+- Local-LLM mode (Ollama, vLLM, llama.cpp) for the Scene Writers
+  so people can generate episodes without an Anthropic key
+- A `--continue` mode that picks up after the validator's
+  feedback and lets the Showrunner revise before scenes are written
+- Beat templates per series (the deferred Phase 4 work)
+- Multi-episode arcs
 
-**The Episode Writer** (Phase 5). This is the headline feature: a
-multi-agent writer's room that uses the graph as canon bible. Big lift,
-big payoff. If you have multi-agent harness experience, this is the
-contribution that would make this project legendary.
+**Frontends.** A web UI for `./trek` and `./write-episode` would
+massively widen the audience. So would a Telegram or Discord bot
+wrapping the agent.
+
+**Improve the parser.** Edge cases exist. If you find an episode
+that parses thin (< 300 dialogue lines for a screenplay or < 100
+for a transcript), that's likely a parser bug — open an issue
+with the script ID and we'll fix the state machine.
 
 ## Development workflow
 
@@ -82,6 +94,31 @@ existing `tests/test_parser.py` is a sketch — add to it freely.
 - [ ] New env vars (if any) are documented in `src/config.py` and `README.md`.
 - [ ] `CHANGELOG.md` gets a line under `[Unreleased]`.
 - [ ] Star Trek references in commit messages are encouraged but optional.
+
+## Branch protection (what the rules actually are)
+
+The `main` branch on this repo has protection enabled:
+
+- **No direct pushes from contributors** — everything outside the
+  maintainer's solo workflow goes through a PR.
+- **CI must pass** before merge (syntax + import smoke tests on Linux,
+  macOS, and Windows × Python 3.11 and 3.12).
+- **At least one review** must approve the PR.
+- **Stale reviews are dismissed** when new commits are pushed.
+- **Conversation threads must be resolved** before merging.
+- **No force-pushes**, no branch deletions.
+
+(The repo owner retains bypass for solo housekeeping commits — small
+doc tweaks, version bumps, badge fixes. Feature work goes through PR
+regardless.)
+
+These rules exist so that the release artifacts (sample episodes,
+embedded corpus, validated agents) stay reproducible and the CI
+badge in the README is honest. Working in a feature branch + PR is
+the standard GitHub workflow and isn't extra friction.
+
+If you're working on something experimental and want a sandbox,
+**fork the repo** — your fork is yours to push to freely.
 
 ## Filing issues
 
