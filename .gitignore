@@ -32,3 +32,6 @@ Thumbs.db
 *.swp
 
 data/behavioral_cards/
+# Generated episodes — keep the sample, ignore the rest
+data/generated_episodes/*
+!data/generated_episodes/SAMPLE_*

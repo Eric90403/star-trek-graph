@@ -1,0 +1,6 @@
+#!/bin/bash
+# Generate a Star Trek episode (multi-agent writer's room).
+# Example:
+#   ./write-episode --premise "Picard discovers an extinct civilization" --series TNG
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$DIR/.venv/bin/python" "$DIR/src/episode_writer.py" "$@"
