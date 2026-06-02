@@ -223,7 +223,7 @@ so the output reads as printed comic rather than AI painting, and lays
 out professional balloons:
 
 - Pure-white rounded-rect speech balloons with curved tapered tails
-- Double-outline radio balloons with zig-zag tails for combadge / viewscreen / intercom (Star Trek convention)
+- Double-outline radio balloons (no tail) with inline `Speaker via Comms:` prefix in red for combadge / viewscreen / intercom (Star Trek IDW convention)
 - Cyan italic caption boxes for Captain's Log entries (IDW Trek convention)
 - ALL CAPS body text in Komika Text (free comic font, ships with the repo)
 - Bangers display font for titles and sound effects

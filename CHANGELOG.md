@@ -5,6 +5,94 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] — 2026-06-02
+
+Comic pipeline Stage 2 design + radio-balloon italic + PanelScript.
+Replaces the broken Opus-iteration approach with a documented, testable
+design that targets a Stage 3 full-page composition.
+
+### Added — Comic pipeline design docs
+- `data/COMIC_BEST_PRACTICES.md` — research synthesis from Blambot
+  (Nate Piekos, foundational rules), Todd Klein (Sandman letterer,
+  practical workflow), Graphixly (Liz Staley, beginner-friendly
+  placement), Scott McCloud (Understanding Comics: transitions,
+  gutters, closure), Comics Devices Library (balloon tag device),
+  and the Recraft V4 prompt engineering guide. Each design rule
+  in the pipeline traces back to a specific source.
+- `data/COMIC_PIPELINE_DESIGN.md` — the v1 design proposal for
+  Phases 1–5 of the Stage 2 plan: `PanelScript` data model,
+  reading-order placer algorithm, face-veto system, radio-balloon
+  italic update, Recraft prompt rewrite, three-scene test matrix,
+  execution order with cost ceilings.
+- `data/STAGE2_REVISED_PLAN.md` — the new authoritative plan
+  replacing the broken `find_balloon_position()` approach. Fix
+  the art first, then redesign placement around script reading
+  order, delete the combadge-as-anchor branch entirely, verify
+  face protection with unit tests, test across 3 scenes before
+  any page composition.
+
+### Added — PanelScript data model
+- `src/comic/panel_script.py` — explicit script structure
+  (`LineType` enum, `ScriptLine`, `PanelScript` dataclasses) with
+  authoritative `order` field per line. The placer iterates
+  `sorted_lines()` — it never infers reading order from pixel
+  positions. Validates: non-empty lines, unique `order` values,
+  NORMAL lines must have a speaker, valid `speaker_positions`.
+  Helpers: `to_dict()` / `from_dict()` for JSON round-trip.
+- `tests/test_panel_script.py` — 15 unit tests (construction,
+  validation, sort order, filters, round-trip). Runs in 0.07s,
+  no API calls.
+
+### Changed — Radio balloon convention
+- `src/comic/balloons.py` — radio/comm balloon body text now
+  rendered in regular Komika Text Italic (KOMTXTI_) instead of
+  the heavier Bold Italic (KOMTXTBI). The less-bold weight makes
+  the italic slant more visible against the upright red inline
+  `Speaker via Comms:` tag. Per Eric's call 2026-06-02 — three
+  signals now convey "this is a transmission": double outline,
+  italic body, inline tag. No tail.
+- Removed dead zig-zag helper functions (`_zigzag_line`,
+  `_draw_zigzag_tail`) — no callers since radio balloons dropped
+  the zig-zag tail. Stale docstring comments referencing zig-zag
+  tails updated throughout `balloons.py`.
+
+### Changed — Documentation consistency
+- `docs/COMIC_PRODUCTION.md` — five references to zig-zag tails
+  on radio balloons replaced with the no-tail rule. Tail section
+  reorganized: smooth taper for normal speech, no tail on radio
+  (inline prefix conveys the signal). Tellscreen, combadge, and
+  TL;DR sections all updated. Cross-references the revised plan
+  for the design rationale.
+- `README.md` — fixed stale zig-zag reference in the comic
+  pipeline feature list. Now consistent with the no-tail rule.
+- `docs/HANDOFF_2026-06-02_Stage2.md` deprecated → renamed to
+  `docs/HANDOFF_2026-06-02_Stage2.DEPRECATED.md` with a clear
+  banner pointing to `data/STAGE2_REVISED_PLAN.md`. The
+  deprecated doc's "fix the one anchor bug" recommendation was
+  rejected; the revised plan's art-first / script-order approach
+  supersedes it.
+
+### Added — Test infrastructure
+- `scripts/test_italic_radio.py` — renders two sample radio
+  balloons (short + long) to verify the italic body + red tag
+  combo. Used to confirm the visual change with Eric before
+  committing the renderer change.
+- `scripts/test_italic_variants.py` — renders three Komika
+  italic variants side by side (Bold Italic / regular Italic /
+  Kursive Italic) so the font choice is a visible comparison,
+  not a silent decision.
+
+### Notes
+- The Stage 2 WIP files (`src/comic/imagegen.py`,
+  `src/comic/intelligence.py`, `scripts/render_panel_poc.py`)
+  remain uncommitted. They contain the broken Opus-iteration
+  approach that the revised plan supersedes. The placer will
+  be rewritten against `PanelScript` in the next commit (Task 3
+  of the design proposal).
+- `data/poc_comic/SAMPLE_TNG_The_Last_Voice_of_Kethani_PAGE_1.png`
+  is marked for deletion in the working tree (Eric's purge of
+  prior Stage 2 artwork). Not staged in this commit.
+
 ## [0.3.0] — 2026-06-02
 
 The Writers' Room. Adds Deep Space Nine, a no-API-key browse mode,

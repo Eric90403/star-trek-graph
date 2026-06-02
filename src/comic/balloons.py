@@ -2,10 +2,13 @@
 """
 src/comic/balloons.py — Professional comic balloon renderer.
 
-Implements the balloon conventions documented in docs/COMIC_PRODUCTION.md:
+Implements the balloon conventions documented in docs/COMIC_PRODUCTION.md
+and Eric's hard rules (see data/STAGE2_REVISED_PLAN.md):
 
   Normal speech   — rounded rectangle, smooth tapered tail
-  Radio / comm    — double outline, zig-zag tail (Star Trek combadge/viewscreen)
+  Radio / comm    — double outline, NO tail, inline 'Speaker via Comms:' prefix
+                    (Star Trek combadge/viewscreen/intercom). The inline prefix
+                    in red conveys the signal — not a zig-zag tail.
   Shout           — jagged burst outline, larger bold text
   Whisper         — dashed outline
   Thought         — scalloped cloud edge (legacy; use captions instead)
@@ -37,7 +40,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 BALLOON_FILL    = (255, 255, 255)       # pure white, per Blambot
 BALLOON_OUTLINE = (10, 10, 14)          # near-black ink
-OUTLINE_W       = 3                     # px at 1400px canvas
+OUTLINE_W       = 5                     # px at 2K source canvas
 
 CAPTION_YELLOW  = (255, 230, 128)       # #FFE680
 CAPTION_CYAN    = (197, 224, 236)       # #C5E0EC — Star Trek log entries
@@ -47,9 +50,9 @@ CAPTION_BORDER_W = 3
 TEXT_COLOR      = (15, 15, 22)
 SPEAKER_COLOR   = (160, 20, 30)         # used sparingly — inline speaker tags
 
-CORNER_RADIUS   = 28
-PADDING_X       = 18
-PADDING_Y       = 14
+CORNER_RADIUS   = 36
+PADDING_X       = 28
+PADDING_Y       = 22
 LINE_HEIGHT_MUL = 1.05
 
 
@@ -57,7 +60,7 @@ LINE_HEIGHT_MUL = 1.05
 
 class BalloonType(Enum):
     NORMAL  = "normal"        # rounded rect, smooth tail
-    RADIO   = "radio"         # double outline, zig-zag tail (combadge/comm/viewscreen)
+    RADIO   = "radio"         # double outline, no tail, inline 'Speaker via Comms:' prefix (combadge/comm/viewscreen)
     SHOUT   = "shout"         # jagged outline
     WHISPER = "whisper"       # dashed outline
     THOUGHT = "thought"       # scalloped cloud edge
@@ -120,8 +123,8 @@ class FontRegistry:
         if key in self._cache:
             return self._cache[key]
         paths = [
-            self.fonts_dir / "KOMTXTBI.ttf",
-            self.fonts_dir / "KOMTXTI_.ttf",
+            self.fonts_dir / "KOMTXTI_.ttf",   # regular Italic — preferred (more visible slant)
+            self.fonts_dir / "KOMTXTBI.ttf",   # Bold Italic — fallback (heavier, slant less visible)
             "/usr/share/fonts/truetype/dejavu/DejaVuSans-BoldOblique.ttf",
         ]
         self._cache[key] = self._try(paths, size)
@@ -187,23 +190,9 @@ def _quadratic_bezier(p0, p1, p2, steps=20):
     return pts
 
 
-def _zigzag_line(p0, p1, jags=5, amp=8):
-    """Return points for a zigzag/lightning line between two points."""
-    dx, dy = p1[0] - p0[0], p1[1] - p0[1]
-    length = math.hypot(dx, dy)
-    if length < 1:
-        return [p0, p1]
-    nx, ny = dx / length, dy / length
-    perp_x, perp_y = -ny, nx
-    pts = [p0]
-    for i in range(1, jags + 1):
-        t = i / (jags + 1)
-        bx = p0[0] + dx * t
-        by = p0[1] + dy * t
-        sign = 1 if i % 2 else -1
-        pts.append((bx + perp_x * amp * sign, by + perp_y * amp * sign))
-    pts.append(p1)
-    return pts
+# Note: _zigzag_line and _draw_zigzag_tail were removed 2026-06-02.
+# Per Eric's hard rules, radio/comm balloons use NO tail. The double
+# outline + inline 'Speaker via Comms:' prefix conveys the signal.
 
 
 def _rounded_rect_outline(draw, rect, radius, outline, width):
@@ -221,7 +210,7 @@ def _draw_normal_balloon(img: Image.Image, balloon: Balloon, fonts: FontRegistry
     font = fonts.dialogue(dialogue_size)
 
     # Lay out text first to size the balloon
-    max_text_w = 380
+    max_text_w = 700
     lines = wrap_text(draw, balloon.text.upper(), font, max_text_w)
     text_w, text_h = measure_lines(draw, lines, font)
 
@@ -252,14 +241,33 @@ def _draw_normal_balloon(img: Image.Image, balloon: Balloon, fonts: FontRegistry
 
 def _draw_radio_balloon(img: Image.Image, balloon: Balloon, fonts: FontRegistry,
                          dialogue_size: int = 24):
-    """Double-outline rounded-rect with zig-zag tail.
-    Used for combadge / viewscreen / intercom — crucial for Star Trek."""
-    draw = ImageDraw.Draw(img, "RGBA")
-    font = fonts.dialogue(dialogue_size)
+    """Double-outline rounded-rect with NO tail.
+    Used for combadge / viewscreen / intercom — crucial for Star Trek.
 
-    max_text_w = 380
-    lines = wrap_text(draw, balloon.text.upper(), font, max_text_w)
-    text_w, text_h = measure_lines(draw, lines, font)
+    Three signals convey 'transmitted voice': double outline, italic body
+    text, inline `Speaker via Comms:` prefix in red. The reader doesn't
+    need a tail. (Italic body added 2026-06-02 per Eric's call.)
+    """
+    draw = ImageDraw.Draw(img, "RGBA")
+    # Two fonts: tag in non-italic (visually distinct from body),
+    # body in italic (conveys transmitted voice per Blambot).
+    tag_font = fonts.dialogue(dialogue_size)
+    body_font = fonts.dialogue_italic(dialogue_size)
+
+    # Compose full text with inline tag
+    speaker_prefix = ""
+    if balloon.speaker:
+        speaker_prefix = f"{balloon.speaker.title()} via Comms: "
+    full_text = (speaker_prefix + balloon.text).upper()
+    speaker_prefix_upper = speaker_prefix.upper() if speaker_prefix else ""
+
+    # Wrap using body_font (italic) — conservative on width, prevents overflow.
+    max_text_w = 700
+    lines = wrap_text(draw, full_text, body_font, max_text_w)
+
+    # Measure for balloon sizing. body_font (italic) is the wider font
+    # in Komika Text, so using it gives a safely-sized balloon.
+    text_w, text_h = measure_lines(draw, lines, body_font)
     bw = text_w + PADDING_X * 2
     bh = text_h + PADDING_Y * 2
 
@@ -274,17 +282,33 @@ def _draw_radio_balloon(img: Image.Image, balloon: Balloon, fonts: FontRegistry,
     _rounded_rect_outline(draw, inner, max(4, CORNER_RADIUS - 5),
                           BALLOON_OUTLINE, 1)
 
-    # Zig-zag tail
-    if balloon.anchor_xy:
-        _draw_zigzag_tail(draw, (cx, cy), bw, bh, balloon.anchor_xy)
+    # No tail on radio balloons — the double outline + inline 'via Comms'
+    # speaker tag in red + italic body already convey 'this is a transmission'.
 
-    # Text
-    asc, desc = font.getmetrics()
+    # Text — vertically centered
+    asc, desc = body_font.getmetrics()
     line_h = int((asc + desc) * LINE_HEIGHT_MUL)
     y = cy - text_h // 2
     for ln in lines:
-        line_w = draw.textbbox((0, 0), ln, font=font)[2]
-        draw.text((cx - line_w // 2, y), ln, font=font, fill=TEXT_COLOR)
+        tag_w = 0  # default for non-tag lines
+        # Compute actual rendered width: tag (non-italic) + body (italic)
+        if speaker_prefix_upper and ln.startswith(speaker_prefix_upper):
+            tag_w = draw.textbbox((0, 0), speaker_prefix_upper, font=tag_font)[2]
+            body_part = ln[len(speaker_prefix_upper):]
+            body_w = draw.textbbox((0, 0), body_part, font=body_font)[2]
+            line_w = tag_w + body_w
+        else:
+            line_w = draw.textbbox((0, 0), ln, font=body_font)[2]
+
+        x = cx - line_w // 2
+
+        # Render: tag in red non-italic, body in black italic
+        if speaker_prefix_upper and ln.startswith(speaker_prefix_upper):
+            draw.text((x, y), speaker_prefix_upper, font=tag_font, fill=SPEAKER_COLOR)
+            body_part = ln[len(speaker_prefix_upper):]
+            draw.text((x + tag_w, y), body_part, font=body_font, fill=TEXT_COLOR)
+        else:
+            draw.text((x, y), ln, font=body_font, fill=TEXT_COLOR)
         y += line_h
 
 
@@ -295,7 +319,7 @@ def _draw_caption(img: Image.Image, balloon: Balloon, fonts: FontRegistry,
     font = (fonts.dialogue_italic(dialogue_size) if italic
             else fonts.dialogue(dialogue_size))
 
-    max_text_w = 480
+    max_text_w = 800
     lines = wrap_text(draw, balloon.text.upper(), font, max_text_w)
     text_w, text_h = measure_lines(draw, lines, font)
 
@@ -383,20 +407,6 @@ def _draw_smooth_tail(draw, balloon_center, bw, bh, anchor, off_panel=False):
     # Cover the seam where tail meets balloon by re-drawing inner fill
     # (this hides the chord that would otherwise show)
     draw.line([bp1, bp2], fill=BALLOON_FILL, width=OUTLINE_W + 2)
-
-
-def _draw_zigzag_tail(draw, balloon_center, bw, bh, anchor):
-    """Zig-zag (lightning) tail for radio balloons."""
-    cx, cy = balloon_center
-    ax, ay = anchor
-    edge_x, edge_y, perp_x, perp_y = _tail_attach_point(cx, cy, bw, bh, anchor)
-    tip_x = edge_x + (ax - edge_x) * 0.55
-    tip_y = edge_y + (ay - edge_y) * 0.55
-
-    pts = _zigzag_line((edge_x, edge_y), (tip_x, tip_y), jags=4, amp=10)
-    for i in range(len(pts) - 1):
-        draw.line([pts[i], pts[i + 1]],
-                   fill=BALLOON_OUTLINE, width=OUTLINE_W)
 
 
 # ── Public API ────────────────────────────────────────────────────────────────

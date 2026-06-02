@@ -13,7 +13,8 @@ image-gen API pricing pages, and Star Trek IDW comic conventions.
 1. **Font:** Komika Text (body) + Bangers (SFX/titles). Always ALL CAPS body.
 2. **Balloon:** Pure white fill, 3px solid black outline, rounded-rect (radius 25px). NO drop shadow. Tail tapered, terminates 50-60% toward speaker.
 3. **Caption box:** Cream/cyan rectangle (#FFE680 or #C5E0EC for Trek log entries), 2px border. Italic text.
-4. **Radio balloon (Star Trek!):** Double outline + zig-zag tail for combadge/viewscreen/intercom.
+4. **Radio balloon (Star Trek!):** Double outline, NO zig-zag tail, inline
+   `Speaker via Comms:` prefix in red for combadge/viewscreen/intercom.
 5. **Anchor:** Butt balloons against panel top edge — never let them float in negative space.
 6. **Post-process:** Posterization + Canny line overlay (30%) + halftone (5%) + grain (3%) makes Flux output read as comic, not painting.
 7. **Image prompt suffix:** `"comic book art, bold black ink lines, flat cel-shaded coloring, 1990s Star Trek IDW comic style"`
@@ -80,15 +81,19 @@ Primary source: Blambot's [Comic Book Grammar & Tradition](https://blambot.com/p
 | Jagged / burst | Shouting | Larger text, sometimes bold red |
 | Dashed outline | Whispering | |
 | Wavy / squiggly | Weak, dying, drugged, ghost | |
-| **Double-line ("radio balloon")** with zig-zag tail | Comms, combadge, viewscreen, intercom | **Crucial for Star Trek** |
+| **Double-line ("radio balloon")** — NO tail, inline `Speaker via Comms:` prefix in red | Comms, combadge, viewscreen, intercom | **Crucial for Star Trek** — modern IDW style. The inline prefix conveys the signal; do NOT use a zig-zag tail. |
 | Rectangular with computer-style border | AI / computer voice | Data's positronic thoughts often get a unique angular balloon |
 
 ### Tails
 
 - **Smooth curved tapered tail:** normal speech
-- **Zig-zag / lightning tail:** electronic/radio (paired with radio balloon)
 - **Bubble tail (three small circles):** thought
 - **No tail, just floating:** off-panel narration in caption box
+- **No tail on radio balloons:** the double outline + inline `Speaker via Comms:`
+  prefix in red conveys the signal. (Industry historically paired radio
+  balloons with zig-zag/lightning tails, but the modern IDW Star Trek style
+  drops the zig-zag in favor of the inline speaker tag. See
+  `data/STAGE2_REVISED_PLAN.md` for the design rationale.)
 
 **Tail length and pointing:**
 - Terminates at ~50-60% of distance between balloon body and speaker's mouth
@@ -304,8 +309,13 @@ Even with free tech, redistribution of comics featuring Stewart/Frakes/Spiner li
 ### Star Trek-specific conventions
 
 - **Captain's Log:** italic caption, cyan/pale-blue box, opens scenes
-- **Combadge dialogue:** ALWAYS radio balloon (double outline + zig-zag tail) even when speaker is right next to recipient
-- **Viewscreen dialogue:** radio balloon, tail points to viewscreen (not original speaker)
+- **Combadge dialogue:** ALWAYS radio balloon (double outline, NO zig-zag tail) with
+  inline `Speaker via Comms:` prefix in red, even when speaker is right next to
+  recipient. The reader identifies the transmitter from the inline tag, not from
+  a tail pointing at a combadge. (Updated 2026-06-02.)
+- **Viewscreen dialogue:** radio balloon (no tail), placed by script reading
+  order. The inline `Speaker via Comms:` prefix identifies the far-end
+  speaker; spatial position alone does not.
 - **Computer voice ("Working..."):** rectangular angular balloon, often light grey/cyan fill
 - **Alien language:** bracketed text `<This is honorable>` with asterisk + editorial caption `*Translated from Klingon`
 - **Tech terminology:** stays unformatted — "warp factor seven" not italicized
