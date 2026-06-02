@@ -38,10 +38,11 @@ star-trek-graph/
 ├── scripts/
 │   ├── fetch_scripts.py       ← scrape TNG scripts from st-minutiae.com
 │   ├── ingest_tng.py          ← orchestrates fetch → parse → load
-│   ├── spike.sh               ← original 5-episode spike runner
 │   └── sample_queries.cypher  ← Neo4j Browser exploration queries
 │
 ├── src/
+│   ├── __init__.py
+│   ├── config.py              ← centralised config + TREK_* env var support + __version__
 │   ├── auth.py                ← cross-platform API key resolver
 │   ├── device_utils.py        ← auto-detects CUDA/MPS/CPU
 │   ├── parser.py              ← screenplay → structured JSON
@@ -195,10 +196,10 @@ Do NOT add a normalization pass until the full corpus decision is made
 
 ---
 
-## Current Corpus State
+## Current Corpus State (v0.1.0)
 
 TNG: 176 episodes, 70,544 lines, 2,143 characters — fully loaded in Neo4j.
-Embeddings: not yet built (Phase 2).
+Embeddings: 70k points in Qdrant collection `trek_lines`.
 Top characters: Picard (13,763 lines), Riker (7,941), Data (6,837).
 
 ---

@@ -1,35 +1,39 @@
 #!/usr/bin/env python3
 """
-src/character_agent.py — Phase 2: GraphRAG-grounded character chatbot.
+src/character_agent.py — GraphRAG-grounded character chatbot.
 
-Replaces picard_agent.py's full-context dump with smart retrieval:
-  - Character card loaded from Neo4j (~500 tokens, constant)
-  - Per-turn: embed query → Qdrant vector search → Neo4j graph expansion
-  - ~3,500 tokens per turn instead of 500,000+
-  - Scales to any character, full corpus, multiple series
+Per turn:
+  1. Embed the user message
+  2. Retrieve top-k canon lines from Qdrant (filtered by speaker)
+  3. Expand context via Neo4j graph hops
+  4. Assemble a ~3-4k token system prompt
+  5. Generate a reply with Claude
 
 Usage:
-    python src/character_agent.py                    # talk to Picard
-    python src/character_agent.py --character WORF
-    python src/character_agent.py --character DATA --top-k 60
+    ./trek                                  # talk to Picard
+    ./trek --character WORF
+    ./trek --character DATA --top-k 60
+    ./trek --model claude-sonnet-4-5        # cheaper, faster
 """
 
+from __future__ import annotations
+
 import argparse
-import json
-import sys
 import os
+import sys
+import time
 import warnings
+
 warnings.filterwarnings("ignore")
 
-# ── Auth (cross-platform) ────────────────────────────────────────────────────
-# Checks ANTHROPIC_API_KEY env var first, then ~/.hermes/auth.json (Hermes users).
+# Local imports
 sys.path.insert(0, os.path.dirname(__file__))
-from auth import get_api_key  # noqa: E402
-
-# ── Config ────────────────────────────────────────────────────────────────────
-
-OPUS_MODEL   = "claude-opus-4-5"
-SONNET_MODEL = "claude-sonnet-4-5"
+from auth import get_api_key                                          # noqa: E402
+from config import (                                                  # noqa: E402
+    DEFAULT_LLM_MODEL, DEFAULT_TOP_K,
+    HISTORY_TURNS_KEPT, MAX_OUTPUT_TOKENS,
+    __version__,
+)
 
 
 # ── System prompt ─────────────────────────────────────────────────────────────
@@ -56,95 +60,161 @@ RULES:
 """
 
 
+# ── LLM call with retry ───────────────────────────────────────────────────────
+
+def call_llm_with_retry(client, *, model, system, messages,
+                        max_tokens, max_retries=3):
+    """One call to the Anthropic API with exponential backoff on transient
+    errors. Returns (reply_text, usage) or raises after exhausting retries."""
+    import anthropic
+
+    for attempt in range(max_retries):
+        try:
+            response = client.messages.create(
+                model=model,
+                max_tokens=max_tokens,
+                system=system,
+                messages=messages,
+            )
+            text = next(b.text for b in response.content if hasattr(b, "text"))
+            return text, response.usage
+        except (anthropic.APIConnectionError, anthropic.APIStatusError,
+                anthropic.RateLimitError) as exc:
+            if attempt == max_retries - 1:
+                raise
+            delay = 2 ** attempt
+            print(f"\n  [API hiccup: {type(exc).__name__} — retrying in {delay}s]",
+                  flush=True)
+            time.sleep(delay)
+    raise RuntimeError("unreachable")  # keep type checker happy
+
+
 # ── Chat loop ─────────────────────────────────────────────────────────────────
 
-def chat(args):
+def chat(args: argparse.Namespace) -> int:
+    # Import heavy stuff only after argparse so --help is fast
+    import anthropic
+    from retriever import Retriever, EmptyCollectionError
+
     character = args.character.upper()
     name = character.title()
 
-    # Import here so startup errors are clear
-    import anthropic
-    from retriever import Retriever
+    print(f"\nInitializing {name} agent (GraphRAG, trek-graph v{__version__})...")
+    try:
+        retriever = Retriever()
+    except EmptyCollectionError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
 
-    print(f"\nInitializing {name} agent (GraphRAG mode)...")
-    retriever = Retriever()
-
-    # Load static character card once
     card = retriever.get_character_card(character)
     if not card["total_lines"]:
-        print(f"\nCharacter '{character}' not found in graph.")
-        print("Try: PICARD, RIKER, DATA, WORF, GEORDI, BEVERLY, TROI")
+        print(f"\nCharacter '{character}' not found in the graph.", file=sys.stderr)
+        print("\nTry one of these top-by-lines characters:", file=sys.stderr)
+        print("  PICARD, RIKER, DATA, GEORDI, WORF, BEVERLY, TROI, WESLEY",
+              file=sys.stderr)
         retriever.close()
-        sys.exit(1)
+        return 1
 
-    client = anthropic.Anthropic(api_key=get_api_key())
-    history = []
+    try:
+        client = anthropic.Anthropic(api_key=get_api_key())
+    except RuntimeError as exc:
+        # auth.py raises a clear setup-instructions error; surface and exit
+        print(str(exc), file=sys.stderr)
+        retriever.close()
+        return 1
+
+    history: list[dict] = []
 
     print(f"\n{'='*60}")
     print(f"  CHARACTER:  {name}")
     print(f"  Mode:       GraphRAG (retrieval per turn)")
-    print(f"  Corpus:     {card['total_lines']:,} lines, {card['total_episodes']} episodes")
-    print(f"  Top k:      {args.top_k} lines retrieved per turn")
+    print(f"  Corpus:     {card['total_lines']:,} lines, "
+          f"{card['total_episodes']} episodes")
+    print(f"  Top-k:      {args.top_k} lines retrieved per turn")
     print(f"  Co-stars:   {', '.join(card['top_costars'][:5])}")
-    print(f"  Type 'quit' to exit")
+    print(f"  Model:      {args.model}")
+    print(f"  Type 'quit' to exit, 'reset' to clear conversation history.")
     print(f"{'='*60}\n")
 
-    while True:
-        try:
-            user_input = input("You: ").strip()
-        except (KeyboardInterrupt, EOFError):
-            print(f"\n\n{name}: Engage.")
-            break
+    try:
+        while True:
+            try:
+                user_input = input("You: ").strip()
+            except (KeyboardInterrupt, EOFError):
+                print(f"\n\n{name}: Engage.")
+                break
 
-        if not user_input:
-            continue
-        if user_input.lower() in ("quit", "exit", "q"):
-            print(f"\n{name}: Dismissed.")
-            break
+            if not user_input:
+                continue
+            if user_input.lower() in ("quit", "exit", "q"):
+                print(f"\n{name}: Dismissed.")
+                break
+            if user_input.lower() == "reset":
+                history = []
+                print("(history cleared)\n")
+                continue
 
-        # Build retrieval query from current input + recent history
-        retrieval_query = user_input
-        if history:
-            # Include last assistant turn for continuity
-            last = history[-1]["content"] if history else ""
-            retrieval_query = f"{last[:200]} {user_input}"
+            # Build the retrieval query: last assistant turn (for continuity)
+            # plus the new user message.
+            retrieval_query = user_input
+            if history:
+                last_assistant = history[-1]["content"]
+                retrieval_query = f"{last_assistant[:200]} {user_input}"
 
-        # Retrieve relevant lines + graph context
-        ctx = retriever.retrieve(character, retrieval_query, top_k=args.top_k)
+            ctx = retriever.retrieve(character, retrieval_query, top_k=args.top_k)
 
-        # Build fresh system prompt with retrieved context
-        system = SYSTEM_TEMPLATE.format(
-            name=name,
-            context_block=ctx["prompt_block"],
-            total_lines=card["total_lines"],
-        )
+            system = SYSTEM_TEMPLATE.format(
+                name=name,
+                context_block=ctx["prompt_block"],
+                total_lines=card["total_lines"],
+            )
 
-        history.append({"role": "user", "content": user_input})
+            history.append({"role": "user", "content": user_input})
 
-        response = client.messages.create(
-            model=OPUS_MODEL,
-            max_tokens=1024,
-            system=system,
-            messages=history,
-        )
+            # Keep only the last N turns of history to bound context growth
+            trimmed = history[-(HISTORY_TURNS_KEPT * 2):]
 
-        reply = next(b.text for b in response.content if hasattr(b, "text"))
-        history.append({"role": "assistant", "content": reply})
+            try:
+                reply, usage = call_llm_with_retry(
+                    client,
+                    model=args.model,
+                    system=system,
+                    messages=trimmed,
+                    max_tokens=MAX_OUTPUT_TOKENS,
+                )
+            except Exception as exc:
+                print(f"\n[Anthropic API error after retries: {exc}]")
+                print("[Conversation preserved — try again, or 'quit' to exit.]\n")
+                history.pop()  # un-record the user turn that failed
+                continue
 
-        # Token usage for transparency
-        usage = response.usage
-        print(f"\n{name}: {reply}")
-        print(f"\n  [retrieved {len(ctx['lines'])} lines | "
-              f"in={usage.input_tokens} out={usage.output_tokens} tokens]\n")
+            history.append({"role": "assistant", "content": reply})
+
+            print(f"\n{name}: {reply}")
+            print(f"\n  [retrieved {len(ctx['lines'])} lines | "
+                  f"in={usage.input_tokens} out={usage.output_tokens} tokens]\n")
+    finally:
+        retriever.close()
+
+    return 0
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="GraphRAG Star Trek character chatbot")
+def main() -> int:
+    ap = argparse.ArgumentParser(
+        description="GraphRAG Star Trek character chatbot",
+    )
     ap.add_argument("--character", "-c", default="PICARD",
-                    help="Character name (default: PICARD)")
-    ap.add_argument("--top-k", type=int, default=40,
-                    help="Lines to retrieve per turn (default: 40)")
-    args = ap.parse_args()
-    chat(args)
+                    help="Character canonical name (default: PICARD)")
+    ap.add_argument("--top-k", type=int, default=DEFAULT_TOP_K,
+                    help=f"Lines retrieved per turn (default: {DEFAULT_TOP_K})")
+    ap.add_argument("--model", default=DEFAULT_LLM_MODEL,
+                    help=f"Anthropic model id (default: {DEFAULT_LLM_MODEL}). "
+                         "Use claude-sonnet-4-5 for faster/cheaper responses.")
+    ap.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    return chat(ap.parse_args())
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
