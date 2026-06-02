@@ -210,11 +210,21 @@ Disk:        522MB
 Dims:        768
 Max tokens:  8192
 CPU speed:   ~500-800 lines/sec on i7-8850H
-GPU:         Optional (P2000 4GB works, adds ~3x speed)
+GPU:         Auto-detected by src/device_utils.py
 Cost:        $0.00
 MTEB score:  Beats OpenAI text-embedding-ada-002
 License:     Apache 2.0
 ```
+
+**Device selection (src/device_utils.py):**
+The device is auto-detected at runtime — no manual overrides needed:
+- Linux/Windows with working CUDA GPU → `cuda`
+- macOS Apple Silicon → `mps`
+- macOS Intel / CPU-only / broken CUDA arch → `cpu` (this machine's P2000
+  has a CUDA arch mismatch with the installed PyTorch build)
+
+`device_utils.get_device()` probes each backend with an actual tensor operation
+to catch silent failures. The result is cached after the first call.
 
 Do NOT commit model weights to git. The weights are pulled automatically
 by sentence-transformers on first use. The model name is pinned in
@@ -270,3 +280,20 @@ ssh -L 7475:localhost:7475 -L 7688:localhost:7688 user@host
 
 Use Sonnet for bulk/outline work, Opus for final voice generation and
 canon arbitration.
+
+---
+
+## Provenance
+
+This project was designed and built in a single interactive session with
+**[Hermes Agent](https://hermes-agent.nousresearch.com)** (Nous Research)
+running Claude Opus on Ubuntu Linux (kernel 7.0.0-15-generic).
+Author: Eric Stewart.
+
+Every component in this document — the two-store GraphRAG architecture,
+the five-layer graph schema, the nomic-embed-text-v1.5 embedding pipeline,
+the character agent with per-turn retrieval, and this document itself —
+was designed and generated in that session.
+
+The project was shared on r/hermesagent as a real-world demonstration of
+AI-assisted software architecture and implementation.

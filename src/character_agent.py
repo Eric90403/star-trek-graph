@@ -17,22 +17,19 @@ Usage:
 import argparse
 import json
 import sys
+import os
 import warnings
 warnings.filterwarnings("ignore")
 
+# ── Auth (cross-platform) ────────────────────────────────────────────────────
+# Checks ANTHROPIC_API_KEY env var first, then ~/.hermes/auth.json (Hermes users).
+sys.path.insert(0, os.path.dirname(__file__))
+from auth import get_api_key  # noqa: E402
+
 # ── Config ────────────────────────────────────────────────────────────────────
 
-AUTH_FILE = "/home/eric/.hermes/auth.json"
 OPUS_MODEL   = "claude-opus-4-5"
 SONNET_MODEL = "claude-sonnet-4-5"
-
-
-# ── Auth ──────────────────────────────────────────────────────────────────────
-
-def get_api_key() -> str:
-    with open(AUTH_FILE) as f:
-        d = json.load(f)
-    return d["credential_pool"]["anthropic"][0]["access_token"]
 
 
 # ── System prompt ─────────────────────────────────────────────────────────────

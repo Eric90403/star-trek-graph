@@ -18,7 +18,12 @@ Usage:
 import argparse
 import time
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = ""   # force CPU — P2000 CUDA arch mismatch
+import sys
+
+# Device detection — handles CUDA (Linux/Windows), MPS (Apple Silicon), CPU fallback.
+# This replaces the old hardcoded CUDA_VISIBLE_DEVICES="" override.
+sys.path.insert(0, os.path.dirname(__file__))
+from device_utils import get_device  # noqa: E402
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -157,7 +162,7 @@ def embed_and_load(args):
     # 2. Load embedding model
     print(f"\nLoading {EMBED_MODEL}...")
     t1 = time.time()
-    model = SentenceTransformer(EMBED_MODEL, trust_remote_code=True, device="cpu")
+    model = SentenceTransformer(EMBED_MODEL, trust_remote_code=True, device=get_device())
     print(f"  Model loaded in {time.time()-t1:.1f}s")
 
     # 3. Ensure Qdrant collection exists

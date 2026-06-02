@@ -17,13 +17,18 @@ import sys
 from neo4j import GraphDatabase
 import anthropic
 
+# ── Auth (cross-platform) ────────────────────────────────────────────────────
+# Checks ANTHROPIC_API_KEY env var first, then ~/.hermes/auth.json (Hermes users).
+import sys as _sys
+import os as _os
+_sys.path.insert(0, _os.path.dirname(__file__))
+from auth import get_api_key  # noqa: E402
+
 # ── Config ──────────────────────────────────────────────────────────────────
 
 NEO4J_URI      = "bolt://localhost:7688"
 NEO4J_USER     = "neo4j"
 NEO4J_PASSWORD = "trekgraph"
-
-AUTH_FILE      = "/home/eric/.hermes/auth.json"
 
 # ── Neo4j helpers ────────────────────────────────────────────────────────────
 
@@ -157,12 +162,6 @@ RULES FOR THIS CONVERSATION:
 
 
 # ── Anthropic client ─────────────────────────────────────────────────────────
-
-def get_api_key() -> str:
-    with open(AUTH_FILE) as f:
-        d = json.load(f)
-    return d["credential_pool"]["anthropic"][0]["access_token"]
-
 
 def get_anthropic_client():
     key = get_api_key()

@@ -90,18 +90,24 @@ Python 3.11 (pydantic-core won't build on 3.14 yet as of 2026).
 **nomic-ai/nomic-embed-text-v1.5** — local, already cached, $0 cost.
 
 ```python
-import os; os.environ["CUDA_VISIBLE_DEVICES"] = ""  # REQUIRED — P2000 CUDA arch mismatch
+from device_utils import get_device
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('nomic-ai/nomic-embed-text-v1.5',
-                             trust_remote_code=True, device="cpu")
+                             trust_remote_code=True, device=get_device())
 # IMPORTANT: prefix "search_document: " on ingest
 #            prefix "search_query: "    at query time
 vecs = model.encode(["search_document: " + text])
 ```
 
-ALWAYS set CUDA_VISIBLE_DEVICES="" before loading — the P2000 GPU has a
-CUDA architecture mismatch with the installed PyTorch build. CPU runs at
-~165 lines/sec, which is fine for all practical purposes.
+**Cross-platform device selection (src/device_utils.py):**
+- Linux + working CUDA GPU → `cuda`
+- macOS Apple Silicon → `mps`
+- macOS Intel / CPU-only / broken CUDA arch → `cpu`
+
+`get_device()` probes each backend with an actual tensor op to catch
+architecture mismatches (like this machine's P2000 CUDA arch mismatch).
+Do NOT use the old `os.environ["CUDA_VISIBLE_DEVICES"] = ""` override —
+that was a local workaround now replaced by device_utils.py.
 
 Do NOT use OpenAI or Anthropic embeddings — we have a perfectly good
 local model. Do NOT commit model weights to git.
@@ -204,3 +210,28 @@ The Hermes skill for this project pattern is saved as:
 When asked to work on this project, load AGENTS.md first, then load
 the relevant src/ file you're editing. The docs/ folder is authoritative
 on architecture decisions — check it before designing new components.
+
+**Auth resolution (src/auth.py):**
+The API key is resolved by `src/auth.py` in this order:
+1. `ANTHROPIC_API_KEY` environment variable (preferred — works everywhere)
+2. `~/.hermes/auth.json` credential pool (Hermes Agent users)
+3. RuntimeError with setup instructions if neither is found
+
+Do NOT hardcode auth paths or API keys. Always import from `src/auth.py`.
+
+---
+
+## Hermes Provenance
+
+This project was designed and built in a single interactive session with
+**Hermes Agent** (Nous Research) running Claude Opus on Ubuntu Linux
+(kernel 7.0.0-15-generic). Author: Eric Stewart.
+
+Components generated in that session:
+- Graph schema (ONTOLOGY.md) and architecture (ARCHITECTURE.md)
+- Parser, loader, embedder, retriever, character agents
+- Ingest scripts and sample Cypher queries
+- All documentation including this file
+
+The project was shared on r/hermesagent as a demonstration of what's
+possible with an AI agent working on a technical project end-to-end.

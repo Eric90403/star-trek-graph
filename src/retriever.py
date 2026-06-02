@@ -14,7 +14,12 @@ Usage (as a module):
 """
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = ""   # force CPU — P2000 CUDA arch mismatch
+import sys
+
+# Device detection — handles CUDA (Linux/Windows), MPS (Apple Silicon), CPU fallback.
+# This replaces the old hardcoded CUDA_VISIBLE_DEVICES="" override.
+sys.path.insert(0, os.path.dirname(__file__))
+from device_utils import get_device  # noqa: E402
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -43,7 +48,7 @@ EXPAND_LIMIT   = 3      # max episodes to expand in graph
 class Retriever:
     def __init__(self):
         print("Loading embedding model...", end=" ", flush=True)
-        self.model = SentenceTransformer(EMBED_MODEL, trust_remote_code=True, device="cpu")
+        self.model = SentenceTransformer(EMBED_MODEL, trust_remote_code=True, device=get_device())
         print("done")
         self.qclient = QdrantClient(url=QDRANT_URL)
         self.driver  = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))

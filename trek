@@ -1,0 +1,5 @@
+#!/bin/bash
+# trek — GraphRAG character chatbot launcher (Linux/macOS)
+# Usage: ./trek [--character WORF] [--top-k 40]
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$DIR/.venv/bin/python" "$DIR/src/character_agent.py" "$@"
