@@ -1,6 +1,5 @@
 # Star Trek Graph
 
-[![CI](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml/badge.svg)](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-green.svg)](CHANGELOG.md)
