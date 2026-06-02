@@ -196,16 +196,16 @@ Do NOT add a normalization pass until the full corpus decision is made
 
 ---
 
-## Current Corpus State (v0.1.0 + Unreleased)
+## Current Corpus State (v0.2.0)
 
-TNG: 176 episodes, 70,544 lines, 2,143 characters — fully loaded in Neo4j.
-TOS: 79 episodes (80 transcripts; Menagerie Pt 2 = `tos:16b`),
-29,352 lines, 472 new characters — fully loaded as `series="TOS"`,
-`source_type="transcript"`, IDs namespaced `tos:<prod_num>`.
-Embeddings: 70k TNG points in Qdrant collection `trek_lines`
-(TOS embeddings pending — separate `embedder.py` run).
+TNG: 176 episodes, 70,544 lines, 2,143 characters — fully loaded in Neo4j and Qdrant.
+TOS: 80 episodes (79 + Menagerie Pt 2 = `tos:16b`), 29,316 lines, 472 characters
+  — fully loaded as `series="TOS"`, `source_type="transcript"`,
+  IDs namespaced `tos:<prod_num>`. Embeddings live in the same Qdrant collection.
+Qdrant: 99,161 points in `trek_lines` (TNG + TOS combined).
 Top TNG speakers: Picard (13,763), Riker (7,941), Data (6,837).
 Top TOS speakers: Kirk (9,324), Spock (4,593), McCoy (2,571).
+Both agents validated end-to-end (see `docs/VALIDATION.md`).
 
 ---
 

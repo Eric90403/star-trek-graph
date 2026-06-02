@@ -13,13 +13,14 @@
 [![CI](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml/badge.svg)](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-green.svg)](CHANGELOG.md)
+[![Version 0.2.0](https://img.shields.io/badge/version-0.2.0-green.svg)](CHANGELOG.md)
 [![Built with Hermes Agent](https://img.shields.io/badge/built%20with-Hermes%20Agent-blueviolet)](https://hermes-agent.nousresearch.com)
 
 > "The sky's the limit." — Jean-Luc Picard, *All Good Things...*
 
-A knowledge graph of every line ever spoken in *Star Trek: The Next Generation* —
-176 episodes, 70,544 lines, 2,143 characters — powering GraphRAG-grounded
+A knowledge graph of every line ever spoken in *Star Trek: The Original
+Series* and *Star Trek: The Next Generation* — 256 episodes, 99,860 lines,
+2,567 characters — powering GraphRAG-grounded
 character chatbots and an AI episode writer, all running locally for $0 in
 embedding costs.
 
@@ -39,8 +40,8 @@ Three things in one repo:
 
 | Component | What it does |
 |-----------|-------------|
-| **Knowledge Graph** | All 176 TNG episodes loaded into Neo4j. Episodes, scenes, lines, characters, locations, ships — all connected. |
-| **Character Chatbots** | Talk to Picard, Worf, Data, or any of 2,143 characters. The LLM is grounded *exclusively* in canon dialogue — no hallucinated backstory. |
+| **Knowledge Graph** | All 176 TNG + 80 TOS episodes loaded into Neo4j. Episodes, scenes, lines, characters, locations, ships — all connected. |
+| **Character Chatbots** | Talk to Picard, Kirk, Spock, Worf, Data, or any of 2,567 characters. The LLM is grounded *exclusively* in canon dialogue — no hallucinated backstory. |
 | **Episode Writer** *(Phase 5)* | Multi-agent writer's room where character agents collaborate to draft new canon-faithful episodes. |
 
 The trick is **GraphRAG** (Retrieval-Augmented Generation from a graph):
@@ -143,14 +144,25 @@ trek --character DATA --top-k 60
 ### `./trek` — GraphRAG character chatbot (recommended)
 
 ```
-./trek                          Talk to Picard (default)
-./trek --character WORF         Talk to Worf
-./trek --character DATA         Talk to Data
-./trek --character BEVERLY      Talk to Dr. Crusher
-./trek --character TROI         Talk to Counselor Troi
-./trek --character GEORDI       Talk to Geordi La Forge
-./trek --character RIKER        Talk to Commander Riker
-./trek --top-k 60               Retrieve 60 lines per turn (more context, slower)
+./trek                                Talk to Picard (default)
+./trek --character WORF               Talk to Worf
+./trek --character DATA               Talk to Data
+./trek --character BEVERLY            Talk to Dr. Crusher
+./trek --character TROI               Talk to Counselor Troi
+./trek --character GEORDI             Talk to Geordi La Forge
+./trek --character RIKER              Talk to Commander Riker
+./trek --character KIRK --series TOS  Talk to Captain Kirk
+./trek --character SPOCK --series TOS Talk to Mister Spock
+./trek --character MCCOY --series TOS Talk to Doctor McCoy
+./trek --top-k 60                     Retrieve 60 lines per turn (more context, slower)
+./trek --model claude-sonnet-4-5      Use Sonnet instead of Opus (faster, cheaper)
+```
+
+There are also shortcut launchers:
+
+```
+./picard   →  ./trek --character PICARD
+./kirk     →  ./trek --character KIRK --series TOS
 ```
 
 The agent retrieves only the lines most relevant to your current question —
@@ -159,33 +171,29 @@ efficient, accurate, and it scales to any character in the corpus.
 Every character responds from canon dialogue only. If you ask Worf about something
 not in the graph, he'll tell you he has no record of it. That's the point.
 
-### `./picard` — Legacy full-context agent
-
-```
-./picard                        Picard (loads ALL 13,763 of his lines at startup)
-./picard --character RIKER      Any character — but big characters hit token limits
-```
-
-The original Phase 1 implementation. Useful for small characters (under ~2,000 lines)
-where loading everything at once is fine. For Picard/Riker/Data, use `./trek`.
-
 ### Ingest scripts
 
 ```bash
-# Fetch raw scripts from st-minutiae.com
-.venv/bin/python scripts/fetch_scripts.py
-
-# Full pipeline: fetch + parse + load into Neo4j
+# TNG: fetch 176 scripts from st-minutiae.com, parse, load into Neo4j
 .venv/bin/python scripts/ingest_tng.py
 
-# Embed all lines into Qdrant
+# TOS: fetch 80 transcripts from chakoteya.net, parse, load into Neo4j
+.venv/bin/python scripts/ingest_tos.py
+
+# Embed everything in Neo4j into Qdrant
 .venv/bin/python src/embedder.py
 
-# Embed only one character (useful for testing)
+# Embed only one series (recommended for incremental updates)
+.venv/bin/python src/embedder.py --series TOS
+
+# Embed only one character
 .venv/bin/python src/embedder.py --speaker PICARD
 
 # Dry run — count lines without embedding
 .venv/bin/python src/embedder.py --dry-run
+
+# Reset and rebuild the collection from scratch
+.venv/bin/python src/embedder.py --reset
 ```
 
 ---
@@ -308,8 +316,9 @@ Full schema spec: `docs/ONTOLOGY.md`
 
 | Source | Episodes | Lines | Characters | Status |
 |--------|----------|-------|------------|--------|
-| TNG (all 7 seasons) | 176 | 70,544 | 2,143 | loaded |
-| DS9 (all 7 seasons) | 176 | — | — | Phase 3+ |
+| TOS (all 3 seasons) | 80  | 29,316  | 472   | ✅ loaded |
+| TNG (all 7 seasons) | 176 | 70,544  | 2,143 | ✅ loaded |
+| DS9 (all 7 seasons) | 176 | —       | —     | Phase 3+ |
 | TNG Films | 4 | — | — | Phase 3+ |
 | Voyager | 172 | — | — | Phase 4+ |
 

@@ -262,9 +262,9 @@ ssh -L 7475:localhost:7475 -L 7688:localhost:7688 user@host
 
 | Source          | Episodes | Lines   | Characters | Status         |
 |-----------------|----------|---------|------------|----------------|
-| TNG (all 7 seasons) | 176  | 70,544  | 2,143      | ✅ loaded      |
-| TOS (all 3 seasons) | 79 (80 transcripts incl. Menagerie Pt 2) | 29,352 | 472 | ✅ loaded |
-| DS9 (all 7 seasons) | 176  | —       | —          | 📋 Phase 2+   |
+| TNG (all 7 seasons) | 176  | 70,544  | 2,143      | ✅ loaded + embedded |
+| TOS (all 3 seasons) | 80 (incl. Menagerie Pt 2 split) | 29,316 | 472 | ✅ loaded + embedded |
+| DS9 (all 7 seasons) | 176  | —       | —          | 📋 Phase 3+   |
 | TNG Films           | 4    | —       | —          | 📋 Phase 2+   |
 | Voyager (partial)   | 7    | —       | —          | 📋 Phase 3+   |
 
