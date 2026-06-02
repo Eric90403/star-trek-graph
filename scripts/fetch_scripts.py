@@ -1,52 +1,56 @@
 #!/usr/bin/env python3
-"""Fetch TNG scripts from st-minutiae.com."""
-from __future__ import annotations
-
-import sys
-import time
-from pathlib import Path
+"""
+Fetch all TNG scripts from st-minutiae.com.
+IDs 102-277 = all 176 TNG episodes (episode number + 100 offset).
+Skips files already downloaded. Polite: 1s delay between requests.
+"""
 
 import httpx
+import time
+import sys
+from pathlib import Path
 
-SCRIPT_IDS = {
-    102: "Encounter at Farpoint",
-    103: "The Naked Now",
-    175: "The Best of Both Worlds, Part 1",
-    200: "Redemption (was-175 alt)",  # title resolved from header
-    277: "All Good Things... Part 1",
-}
+RAW_DIR    = Path(__file__).parent.parent / "data" / "raw"
+BASE_URL   = "https://www.st-minutiae.com/resources/scripts/{id}.txt"
+USER_AGENT = "star-trek-graph/1.0 fan-research project (github.com/Eric90403/star-trek-graph)"
+TNG_IDS    = list(range(102, 278))   # 102–277 inclusive = 176 episodes
+DELAY      = 1.0                     # seconds between requests
 
-URL = "https://www.st-minutiae.com/resources/scripts/{id}.txt"
-UA = "trek-graph-spike/0.1 (research; contact: local)"
+def fetch_all(ids=TNG_IDS, skip_existing=True, delay=DELAY):
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    downloaded, skipped, failed = [], [], []
 
+    for script_id in ids:
+        dest = RAW_DIR / f"{script_id}.txt"
+        if skip_existing and dest.exists():
+            skipped.append(script_id)
+            print(f"  skip  {script_id} (already exists)")
+            continue
 
-def main() -> int:
-    root = Path(__file__).resolve().parents[1]
-    raw_dir = root / "data" / "raw"
-    raw_dir.mkdir(parents=True, exist_ok=True)
+        url = BASE_URL.format(id=script_id)
+        try:
+            r = httpx.get(url, timeout=15,
+                          headers={"User-Agent": USER_AGENT},
+                          follow_redirects=True)
+            if r.status_code == 200:
+                dest.write_text(r.text, encoding="utf-8")
+                downloaded.append(script_id)
+                print(f"  ✓ {script_id}  ({len(r.text):,} chars)")
+            else:
+                failed.append((script_id, r.status_code))
+                print(f"  ✗ {script_id}  HTTP {r.status_code}")
+        except Exception as e:
+            failed.append((script_id, str(e)))
+            print(f"  ✗ {script_id}  ERROR: {e}")
 
-    ok = 0
-    with httpx.Client(headers={"User-Agent": UA}, timeout=30.0, follow_redirects=True) as c:
-        for sid in SCRIPT_IDS:
-            out = raw_dir / f"{sid}.txt"
-            if out.exists() and out.stat().st_size > 1000:
-                print(f"[skip] {sid} already present ({out.stat().st_size} bytes)")
-                ok += 1
-                continue
-            url = URL.format(id=sid)
-            print(f"[fetch] {sid} <- {url}")
-            try:
-                r = c.get(url)
-                r.raise_for_status()
-                out.write_text(r.text, encoding="utf-8")
-                print(f"  ok ({len(r.text)} chars)")
-                ok += 1
-            except Exception as e:  # noqa: BLE001
-                print(f"  FAIL: {e}", file=sys.stderr)
-            time.sleep(1.0)
-    print(f"Fetched {ok}/{len(SCRIPT_IDS)} scripts.")
-    return 0 if ok == len(SCRIPT_IDS) else 1
+        time.sleep(delay)
+
+    print(f"\nDone. downloaded={len(downloaded)} skipped={len(skipped)} failed={len(failed)}")
+    if failed:
+        print(f"Failed IDs: {failed}")
+    return downloaded, skipped, failed
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    print(f"Fetching {len(TNG_IDS)} TNG scripts → {RAW_DIR}")
+    fetch_all()
