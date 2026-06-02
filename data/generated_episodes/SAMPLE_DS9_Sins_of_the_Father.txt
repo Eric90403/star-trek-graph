@@ -1,0 +1,1615 @@
+**STAR TREK: DEEP SPACE NINE**
+
+"Sins of the Father"
+
+Written by the Writers' Room
+Based on STAR TREK created by Gene Roddenberry
+
+---
+
+TEASER
+
+FADE IN:
+
+Captain's log, stardate 51734.2. Deep Space Nine continues to serve as a critical staging point for Alpha Quadrant forces in the Dominion War. Supply convoys arrive daily, bringing fresh troops and materiel—along with the inevitable flow of refugees, smugglers, and those seeking sanctuary from the conflict. In war, desperation makes strange bedfellows, and today's distress call may test that principle more than most. A damaged Cardassian shuttle has just been detected on long-range sensors, transmitting a priority asylum request. In these times, trust is a luxury we can rarely afford—but neither can we afford to ignore any potential advantage.
+
+FADE OUT.
+
+---
+
+**ACT I**
+
+FADE IN:
+
+INT. OPERATIONS CENTER - NIGHT
+
+(The night shift crew maintains their stations, the usual quiet hum of the station's systems providing a steady backdrop. DAX sits at the science console, running routine sensor sweeps. SISKO emerges from his office, a PADD in hand, clearly working late.)
+
+DAX
+Benjamin, you should be sleeping.
+
+SISKO
+I could say the same for you, old man.
+
+DAX
+I'm running calibrations on the long-range sensors. What's your excuse?
+
+SISKO
+(holds up the PADD)
+Casualty reports from the Seventh Fleet. Admiral Ross wants my assessment by oh-six-hundred.
+
+(DAX's console suddenly CHIRPS with an alert. She leans forward, her expression shifting to focused concern.)
+
+DAX
+I'm picking up a vessel dropping out of warp... bearing one-seven-mark-four. It's small. Shuttle-sized.
+
+SISKO
+(moving to her station)
+Identification?
+
+DAX
+Cardassian. Hideki-class shuttle. She's badly damaged, Benjamin. I'm reading multiple hull breaches, failing life support...
+(beat)
+One life sign. Fading.
+
+SISKO
+Tractor beam. Get them into docking bay four.
+
+DAX
+(working the console)
+Tractor beam engaged.
+(then, with concern)
+The pilot's vital signs are deteriorating. I don't think they have long.
+
+SISKO
+(tapping his combadge)
+Sisko to Doctor Bashir.
+
+BASHIR (V.O.)
+(groggy)
+Bashir here.
+
+SISKO
+Medical emergency, docking bay four. We're bringing in a damaged Cardassian shuttle with one survivor.
+
+BASHIR (V.O.)
+On my way.
+
+SISKO
+(to Dax)
+Contact Odo. Have him meet us there.
+
+(SISKO moves toward the turbolift. DAX follows, leaving the night shift to manage Operations.)
+
+INT. DOCKING BAY FOUR - CONTINUOUS
+
+(The Cardassian shuttle rests in the bay, smoke venting from multiple ruptures in its hull. Scorch marks pattern the exterior in an unmistakable weapons signature. SISKO and DAX arrive just as BASHIR rushes in with a medical kit and an anti-grav stretcher. ODO enters from another entrance, his expression immediately assessing.)
+
+BASHIR
+(scanning with tricorder)
+The hatch is sealed from inside. Can we cut through?
+
+DAX
+(working a wall panel)
+I can bypass the external lock... there.
+
+(The shuttle hatch hisses open with a groan of stressed metal. Smoke billows out. BASHIR doesn't hesitate—he climbs inside.)
+
+ODO
+(examining the hull)
+Commander. These scoring patterns.
+
+SISKO
+You recognize them?
+
+ODO
+Polaron-based weapons fire. Jem'Hadar.
+
+(SISKO's jaw tightens. A moment later, BASHIR emerges, helping guide the stretcher. On it lies MIRA DUKAT, a young Cardassian woman in her early twenties. Her face is bruised, her clothing torn and bloodied. She's unconscious, breathing shallowly.)
+
+BASHIR
+Female, approximately twenty-two years old. Severe plasma burns, internal bleeding, possible cranial trauma.
+(to Sisko)
+I need to get her to the infirmary immediately.
+
+SISKO
+Go.
+
+(BASHIR hurries out with the stretcher. SISKO watches him go, then turns back to the shuttle.)
+
+SISKO (CONT'D)
+Dax, I want a full analysis of that shuttle. Flight recorder, navigational data, everything.
+
+DAX
+I'll have a preliminary report within the hour.
+
+(ODO has already moved inside the shuttle, examining the interior with methodical precision.)
+
+ODO
+Commander. You should see this.
+
+(SISKO steps into the cramped, damaged interior. ODO gestures to a small case wedged beneath the pilot's seat, partially hidden. It's been secured with multiple locks.)
+
+SISKO
+What is it?
+
+ODO
+I don't know. But she went to considerable effort to protect it.
+
+SISKO
+(beat)
+Bring it to the security office. Don't open it until I'm there.
+
+ODO
+Understood.
+
+(SISKO takes one last look around the shuttle's interior—the desperation evident in every hastily bypassed system, every jury-rigged repair.)
+
+SISKO
+Someone wanted her dead very badly.
+
+ODO
+The Jem'Hadar don't pursue damaged shuttles unless ordered to. Whoever this woman is, the Dominion considers her worth killing.
+
+SISKO
+(grim)
+Then we'd better find out why.
+
+INT. INFIRMARY - LATER
+
+(MIRA lies on a biobed, still unconscious. Medical monitors display her vitals—stabilizing but still critical. BASHIR works with focused intensity, a hypospray in one hand, the other adjusting settings on the biobed's neural stimulator. SISKO enters quietly, standing back to let the doctor work.)
+
+BASHIR
+(without looking up)
+I've stopped the internal bleeding and treated the worst of the plasma burns. The cranial trauma was less severe than I initially thought.
+
+SISKO
+Will she survive?
+
+BASHIR
+(finally looking up)
+She should make a full recovery. Though I'd say she came within ten minutes of death. If we hadn't tractored that shuttle in when we did...
+
+(MIRA suddenly stirs, her eyes fluttering open. She tries to sit up, panicked, and BASHIR gently restrains her.)
+
+BASHIR (CONT'D)
+Easy. Easy. You're safe. You're on a Federation space station.
+
+MIRA
+(hoarse, frightened)
+The Jem'Hadar—
+
+BASHIR
+They're gone. You made it.
+
+(MIRA's eyes dart around the infirmary, taking in her surroundings. She sees SISKO, and something in her expression shifts—fear mixing with desperate hope.)
+
+MIRA
+You're... you're Commander Sisko.
+
+SISKO
+(stepping closer)
+That's right. And you are?
+
+(MIRA hesitates. A long beat. Then, with visible effort, she steels herself.)
+
+MIRA
+My name is Mira. Mira Dukat.
+
+(The name lands like a physical blow. SISKO's expression hardens almost imperceptibly. BASHIR glances between them, recognizing the significance.)
+
+SISKO
+Dukat.
+
+MIRA
+(quickly)
+I know what you're thinking. I know what he's done. What he continues to do.
+(struggling to sit up)
+But I'm not him. I've never been him. And right now, I need your help.
+
+SISKO
+(measured)
+You'll understand if I'm skeptical.
+
+MIRA
+The Dominion is hunting me, Commander. Not because of who my father is—because of what I took from him.
+
+BASHIR
+She needs rest, Captain. Whatever this is—
+
+MIRA
+(interrupting, urgent)
+I have intelligence. Dominion fleet movements. Deployment schedules. Things my father thinks are safely locked in his compound on Cardassia.
+(beat)
+I copied everything. And I ran.
+
+(SISKO studies her face—looking for deception, for manipulation. What he sees is exhaustion and fear and something that might be genuine desperation.)
+
+SISKO
+Why?
+
+MIRA
+Because I've seen what they're planning. And because...
+(her voice catches)
+Because I couldn't be his daughter anymore. Not after everything I learned.
+
+(ODO enters, pausing at the threshold as he takes in the scene.)
+
+ODO
+Commander. I've completed a preliminary examination of the shuttle.
+
+SISKO
+(not taking his eyes off Mira)
+And?
+
+ODO
+The damage is consistent with Jem'Hadar weapons fire. Multiple attack runs over an extended pursuit—I'd estimate several hours. Whoever attacked her was persistent.
+(beat)
+I also found evidence of at least three separate attempts to disable her warp drive. They wanted to capture her, not destroy her.
+
+MIRA
+(to Sisko)
+You see? If I were a trap, they wouldn't have tried so hard to stop me.
+
+SISKO
+Or they wanted it to look that way.
+
+MIRA
+(frustrated)
+I'm risking my life coming here. I've betrayed everything I was raised to believe. Do you think I don't know what will happen if my father finds me?
+
+ODO
+(interjecting)
+Mira Dukat. I've been searching our records. There's no mention of you in any Cardassian database we have access to.
+
+MIRA
+(bitter)
+Of course there isn't. I'm illegitimate. A half-Cardassian embarrassment he kept hidden away. My mother was Bajoran.
+
+(The revelation hangs in the air. BASHIR's expression shifts—professional distance giving way to something more complicated.)
+
+SISKO
+Bajoran.
+
+MIRA
+A comfort woman during the Occupation. She died when I was seven. My father... acknowledged me. In his way.
+(her voice hardening)
+He made sure I was educated. Fed. Housed. As long as I stayed invisible.
+
+ODO
+That would explain the lack of official records.
+
+SISKO
+(to Odo)
+What about the case you found on the shuttle?
+
+ODO
+Still sealed. I was waiting for your authorization to open it.
+
+MIRA
+(alarmed)
+Be careful with it. The data isolinears inside—if they're damaged, everything I went through means nothing.
+
+SISKO
+(long beat, considering)
+Doctor, how long until she's fit for a full debriefing?
+
+BASHIR
+I'd recommend at least twelve hours of rest. Her body has been through significant trauma.
+
+MIRA
+(protesting)
+I can talk now. I need to tell you—
+
+BASHIR
+(firmly)
+What you need is to let your body heal. The intelligence will still be there in twelve hours.
+
+(SISKO moves closer to the biobed, looking down at MIRA with an expression that's impossible to read.)
+
+SISKO
+If what you're telling me is true, you may have just handed us a significant advantage in this war.
+(beat)
+But I've dealt with Cardassians before. I've dealt with your father before. So you'll understand that trust is something you'll have to earn.
+
+MIRA
+(meeting his gaze)
+I'm not asking you to trust me
+
+INT. KIRA'S OFFICE - DAY
+
+(KIRA stands behind her desk, arms crossed, facing SISKO. Her posture is rigid, defensive. SISKO remains calm but firm.)
+
+KIRA
+With all due respect, Commander, you can't be serious.
+
+SISKO
+I'm completely serious, Major.
+
+KIRA
+She's a Cardassian. Dukat's daughter. And you want me to conduct the debrief?
+
+SISKO
+I want you to conduct the debrief because you know the Occupation better than anyone on this station. You know Cardassian tactics. You know when they're lying.
+
+KIRA
+I know when they're lying because they're always lying.
+
+SISKO
+Then this should be straightforward.
+
+(KIRA moves around her desk, agitated.)
+
+KIRA
+Commander... I spent ten years fighting Cardassians. I've seen what they do to Bajoran villages. What they do to children. And now you want me to sit across from Dukat's offspring and have a conversation?
+
+SISKO
+I want you to extract intelligence that could save lives.
+
+KIRA
+If there even is any intelligence. This could be a Dominion operation. A plant.
+
+SISKO
+It could be. That's why I need someone who won't be fooled.
+
+(Beat. KIRA looks away, jaw tight.)
+
+KIRA
+You're asking me to treat her like a person.
+
+SISKO
+I'm asking you to do your job, Major.
+
+(KIRA turns back to him, eyes hard.)
+
+KIRA
+And if I can't separate what she is from who her father is?
+
+SISKO
+(evenly)
+Then you tell me, and I'll find someone else. But I don't think that's going to happen.
+
+KIRA
+... Why not?
+
+SISKO
+Because you've never let your feelings compromise the mission. Not once.
+
+(The compliment lands awkwardly. KIRA doesn't know how to respond.)
+
+KIRA
+Fine. I'll do the debrief. But I'm not going to pretend to be sympathetic.
+
+SISKO
+I'm not asking you to pretend anything.
+
+(He moves toward the door, then pauses.)
+
+SISKO (CONT'D)
+She's in the security holding area. Odo's completing his preliminary investigation now.
+
+(KIRA nods curtly. SISKO exits.)
+
+CUT TO:
+
+INT. SECURITY OFFICE - CONTINUOUS
+
+(ODO stands at his console, studying a PADD. SISKO enters. ODO looks up, his expression unreadable as always.)
+
+ODO
+Commander. I was about to contact you.
+
+SISKO
+What have you found?
+
+ODO
+(handing him the PADD)
+Doctor Bashir completed his genetic analysis an hour ago. I've been... reviewing the results.
+
+(SISKO takes the PADD, reads. His brow furrows.)
+
+SISKO
+This can't be right.
+
+ODO
+I had the same reaction. I asked the Doctor to run the analysis twice more.
+
+SISKO
+Half-Bajoran?
+
+ODO
+Her maternal DNA is unquestionably Bajoran. The markers are consistent with the Dahkur province.
+
+(Beat.)
+
+SISKO
+How is that possible?
+
+ODO
+(dryly)
+I suspect the biological mechanics are straightforward enough. The circumstances, however...
+
+SISKO
+A Bajoran woman and Gul Dukat.
+
+ODO
+During the Occupation, such... arrangements... were not unheard of.
+
+(The weight of that statement hangs in the air.)
+
+SISKO
+Does Kira know?
+
+ODO
+Not yet.
+
+SISKO
+Don't tell her. Not until after the debrief. I want her initial assessment unclouded.
+
+ODO
+With respect, Commander, Major Kira is unlikely to find her assessment "unclouded" by any definition.
+
+SISKO
+Understood. But this information changes the equation. I need to know if Mira Dukat's story holds up before we factor in... complications.
+
+(ODO inclines his head slightly.)
+
+ODO
+There's something else you should see.
+
+(He taps his console. A viewscreen activates, showing security footage of MIRA DUKAT in the holding area. She sits on the bench, hunched forward, staring at nothing. Her damaged arm is now properly treated but still bandaged.)
+
+ODO (CONT'D)
+She's been like this for two hours. Hasn't eaten. Hasn't slept. She asked once about the status of her shuttle's data core, and when I told her we were still attempting to recover it, she simply... stopped speaking.
+
+SISKO
+(watching)
+That's not the behavior of a Dominion operative.
+
+ODO
+No. It's the behavior of someone who's given up.
+
+(Beat.)
+
+SISKO
+Keep watching her.
+
+ODO
+I always do.
+
+CUT TO:
+
+INT. SECURITY HOLDING AREA - MOMENTS LATER
+
+(KIRA enters. MIRA looks up slowly, her expression wary. There's a force field between them. KIRA makes no move to lower it.)
+
+KIRA
+I'm Major Kira Nerys. I'll be conducting your debrief.
+
+MIRA
+(flatly)
+The Bajoran first officer. My father mentioned you.
+
+KIRA
+(sharp)
+Did he.
+
+MIRA
+He said you were dangerous.
+
+KIRA
+Your father was right about something for once.
+
+(MIRA almost smiles. It's a bitter, exhausted expression.)
+
+MIRA
+Are you here to interrogate me or execute me? Either way, I'd appreciate knowing in advance.
+
+KIRA
+That depends on what you tell me.
+
+(KIRA moves closer to the force field, studying MIRA like a predator assessing prey.)
+
+KIRA (CONT'D)
+Let's start with the obvious question. Why should I believe anything that comes out of your mouth?
+
+MIRA
+You shouldn't.
+
+(Beat. KIRA wasn't expecting that.)
+
+KIRA
+Excuse me?
+
+MIRA
+I'm a Cardassian. Dukat's daughter. I was raised in privilege while your people starved. Why would you believe me?
+
+KIRA
+... I'm asking the questions.
+
+MIRA
+Then ask better ones.
+
+(KIRA's eyes narrow.)
+
+KIRA
+Fine. The intelligence you claim to have. Where did you get it?
+
+MIRA
+My father's compound on Cardassia Prime. His personal database.
+
+KIRA
+And he just... left classified Dominion tactical data lying around?
+
+MIRA
+He trusted me.
+
+(Something flickers across MIRA's face. Pain. Shame.)
+
+MIRA (CONT'D)
+I was his favorite. His... project.
+
+KIRA
+What does that mean?
+
+MIRA
+(looking away)
+It means he told me things. Showed me things. Brought me into his confidence because he thought... he thought I was like him.
+
+(Beat.)
+
+KIRA
+And are you?
+
+MIRA
+(meeting her eyes)
+I killed two Jem'Hadar soldiers getting off Cardassia. I crippled a patrol ship in the Badlands. I flew through an asteroid field with a damaged warp core rather than let them capture me.
+
+(Pause.)
+
+MIRA (CONT'D)
+So yes, Major. I suppose in some ways I am exactly like him.
+
+(KIRA is unsettled by the self-awareness in MIRA's voice.)
+
+KIRA
+Why did you run? You had everything. Position, protection...
+
+MIRA
+(cutting her off)
+I had a gilded cage and a monster's name.
+
+(She stands, moving to the edge of the holding cell.)
+
+MIRA (CONT'D)
+Do you know what it's like to grow up as Dukat's daughter? To be paraded around as proof of his... enlightenment? "Look at my half-breed child," he'd say. "See how I care for the lesser species."
+
+(KIRA stiffens.)
+
+KIRA
+Half-breed?
+
+(MIRA realizes she's said too much. She turns away.)
+
+MIRA
+Forget it.
+
+KIRA
+No. What did you just say?
+
+MIRA
+I said forget it.
+
+KIRA
+(stepping forward)
+You said half-breed. What did you mean by that?
+
+(Long pause. MIRA doesn't turn around.)
+
+MIRA
+My mother was Bajoran.
+
+(The words hang in the air. KIRA looks like she's been struck.)
+
+KIRA
+... That's not possible.
+
+MIRA
+(bitterly)
+Isn't it? You know what the Occupation was. You know what men like my father did.
+
+(She finally turns to face KIRA.)
+
+MIRA (CONT'D)
+My mother was a comfort woman. She died giving birth to me. My father... kept me. Raised me as a Cardassian. Hid what I was from everyone except himself.
+
+(Beat.)
+
+MIRA (CONT'D)
+I didn't learn the truth until three years ago. And I've been living with it every day since.
+
+(KIRA is struggling to process this. Her hatred is fighting against something else—recognition, perhaps. Horror.)
+
+KIRA
+Why should I believe any of this?
+
+MIRA
+You have a doctor. Run the scan yourself.
+
+(Pause.)
+
+KIRA
+We already did.
+
+(MIRA nods slowly, unsurprised.)
+
+MIRA
+Then you know I'm not lying. About that, at least.
+
+(KIRA turns away, pacing. When she speaks again, her voice is strained.)
+
+KIRA
+The Prophets know I've seen... I've seen Cardassians do terrible things. But this...
+
+MIRA
+(quietly)
+I'm not asking for your sympathy, Major. I'm asking for asylum. There's a difference.
+
+KIRA
+Is there?
+
+(She turns back to face MIRA.)
+
+KIRA (CONT'D)
+Because from where I'm standing, you're still Dukat's daughter. You still grew up in his house, ate his food, wore his name. Half-Bajoran or not.
+
+MIRA
+I know what I am.
+
+KIRA
+Do you? Because I'm not sure I do anymore.
+
+(The force field hums between them. Neither woman moves.)
+
+MIRA
+My mother's name was Tora Naprem.
+
+(KIRA goes
+
+END OF ACT I
+
+---
+
+**ACT II**
+
+FADE IN:
+
+INT. QUARK'S BAR - EVENING
+
+(The bar is quieter than usual, the dinner rush having thinned to scattered clusters of Starfleet personnel and civilians. KIRA sits alone at the far end of the bar, a half-empty glass of springwine in front of her. She's not drinking—just staring at it. DAX enters, spots Kira, and approaches with easy familiarity.)
+
+DAX
+I've been looking for you. Odo said you left Ops early.
+
+KIRA
+I'm off duty.
+
+DAX
+(sitting beside her)
+I can see that.
+
+(Kira doesn't respond. Dax signals to QUARK, who's wiping down glasses behind the bar.)
+
+DAX (CONT'D)
+Raktajino, please.
+
+QUARK
+At this hour? You'll be up all night.
+
+DAX
+That's the idea.
+
+(Quark shrugs and moves to prepare the drink. Dax turns back to Kira, studying her profile.)
+
+DAX (CONT'D)
+You want to talk about it?
+
+KIRA
+Not particularly.
+
+DAX
+All right.
+
+(She waits. A long beat. Kira finally exhales, shoulders dropping.)
+
+KIRA
+I went to see her. In the infirmary.
+
+DAX
+Mira Dukat.
+
+KIRA
+(bitter)
+Don't call her that.
+
+DAX
+What should I call her?
+
+KIRA
+I don't know. That's the problem.
+
+(Quark delivers Dax's raktajino, lingering a moment longer than necessary before moving away—but not far.)
+
+KIRA (CONT'D)
+I walked in there ready to... I don't know what I was ready to do. Interrogate her. Catch her in a lie. Something.
+
+DAX
+And?
+
+KIRA
+(quietly)
+She flinched. When I came through the door. She flinched like I was going to hit her.
+
+(Kira picks up her glass, sets it down again without drinking.)
+
+KIRA (CONT'D)
+Do you know what Bashir told me? Her medical records. The healed fractures, the scar tissue. It goes back years. Decades.
+
+DAX
+I saw the preliminary report.
+
+KIRA
+Then you know. You know what he did to her.
+
+DAX
+Her father.
+
+KIRA
+(sharp)
+Dukat. Say his name. Dukat.
+
+(Dax nods, accepting the correction.)
+
+KIRA (CONT'D)
+The man who ran the Occupation. The man responsible for... for everything. He had a Bajoran comfort woman—I knew that. Everyone knew. And he had a daughter with her, and he hid that daughter away like garbage.
+
+DAX
+Because acknowledging her would have ended his career.
+
+KIRA
+Because she was half-Bajoran. Because she was evidence of his... his...
+
+(She can't find the word. Her hand tightens around the glass.)
+
+KIRA (CONT'D)
+I should hate her. I want to hate her. She's his blood. She carries his name.
+
+DAX
+But?
+
+KIRA
+(breaking)
+But she grew up in a cellar, Jadzia. Beaten if she spoke too loud. Starved if she disobeyed. Treated like an animal by the man who was supposed to protect her—while he stood in front of the Bajoran people and talked about order and civilization.
+
+(Kira finally takes a drink, draining the glass.)
+
+KIRA (CONT'D)
+How am I supposed to hate her? She's a victim. The same as any of us.
+
+DAX
+Maybe you're not supposed to hate her.
+
+KIRA
+(frustrated)
+Then what am I supposed to feel? She's Cardassian. Part of her, anyway. And that part—
+
+DAX
+That part didn't choose to be born any more than you chose to be born during the Occupation.
+
+(Kira stares at her, something wounded in her expression.)
+
+KIRA
+That's not the same thing.
+
+DAX
+Isn't it?
+
+(Before Kira can respond, QUARK appears, setting a fresh glass of springwine in front of her without being asked.)
+
+QUARK
+On the house.
+
+KIRA
+(suspicious)
+Since when?
+
+QUARK
+Since you look like you need it, and I'm feeling generous.
+
+KIRA
+You're never generous.
+
+QUARK
+The forty-seventh Rule of Acquisition: "Don't trust a man who's not generous... unless he's Ferengi."
+
+(Kira almost smiles despite herself. Quark doesn't leave. He leans against the bar, studying her with an expression that's surprisingly serious.)
+
+QUARK (CONT'D)
+I couldn't help overhearing.
+
+KIRA
+Of course you couldn't.
+
+QUARK
+It's a public establishment. Sound carries.
+
+DAX
+Quark...
+
+QUARK
+(ignoring her)
+You want to know something, Major? Something I learned during my brief and deeply unpleasant time in Cardassian custody?
+
+KIRA
+I'm sure you're going to tell me whether I want to hear it or not.
+
+QUARK
+The Cardassians didn't just hurt Bajorans.
+
+(Kira's expression hardens, but Quark presses on.)
+
+QUARK (CONT'D)
+They hurt anyone who got in the way of power. Including their own. Especially their own.
+
+(He pauses, something flickering behind his eyes—an old memory, perhaps.)
+
+QUARK (CONT'D)
+Do you have any idea how many Cardassian citizens disappeared during the height of the Obsidian Order? How many families were destroyed because someone said the wrong thing, looked at the wrong person, had the wrong ancestor three generations back?
+
+KIRA
+That's different.
+
+QUARK
+Is it? The truth is, Major, tyranny doesn't care about species. It just cares about control. And the people who get crushed... they're all the same in the end. Broken. Afraid. Wondering what they did to deserve it.
+
+(A long silence. Kira looks at him as if seeing him for the first time.)
+
+KIRA
+Since when do you know anything about tyranny?
+
+QUARK
+(shrugging)
+I'm a businessman. I've done business with tyrants. You learn things.
+
+(He straightens, pulling back into his familiar demeanor.)
+
+QUARK (CONT'D)
+Anyway. The springwine's still on the house. Don't tell anyone—it'll ruin my reputation.
+
+(He moves away to attend to other customers. Kira stares after him, then down at her glass.)
+
+DAX
+(gently)
+He's not wrong, you know.
+
+KIRA
+I know.
+
+(She stands abruptly, leaving the untouched glass on the bar.)
+
+DAX
+Kira—
+
+KIRA
+I need to think.
+
+(She starts to go, then stops, half-turning back.)
+
+KIRA (CONT'D)
+All my life, I knew who the enemy was. It was simple. Clean. The Cardassians hurt us, we hurt them back.
+
+DAX
+And now?
+
+KIRA
+(quietly)
+Now I don't know anything.
+
+(She walks out. Dax watches her go, concern evident on her face. After a moment, Quark reappears, collecting Kira's abandoned glass.)
+
+QUARK
+She didn't drink it.
+
+DAX
+She will. Eventually.
+
+QUARK
+(nodding toward the door)
+She'll be all right, you know. The Major's tougher than she looks.
+
+DAX
+I know.
+
+QUARK
+(beat)
+So. Since she's not using it, you want the springwine?
+
+DAX
+(faint smile)
+Goodnight, Quark.
+
+(She rises, leaving payment for her raktajino—and a generous tip. Quark watches her go, then looks down at the two abandoned glasses, his expression momentarily unguarded. He shakes it off, pockets the tip, and returns to work as the bar's ambient noise continues around him.)
+
+FADE OUT.
+
+INT. WARDROOM - DAY
+
+(The senior staff sits around the conference table. SISKO stands at the head, arms crossed. ODO has a PADD in hand. DAX studies a display screen showing tactical data. BASHIR looks agitated, leaning forward in his chair. Through the viewport, a DOMINION CRUISER holds position off the station.)
+
+SISKO
+The Vorta's name is Keevan. He arrived twenty minutes ago with a formal extradition request... and a warship.
+
+DAX
+One warship. They could have brought a fleet.
+
+ODO
+Which suggests they're hoping for a diplomatic resolution.
+
+BASHIR
+Or they're testing us. Seeing how we respond to pressure.
+
+SISKO
+Either way, their patience won't last forever. Keevan has given us six hours to surrender Mira Dukat into Dominion custody.
+
+(He moves to the viewport, studying the cruiser.)
+
+SISKO (CONT'D)
+The formal charge is murder. Three Jem'Hadar guards and a Vorta administrator during her escape from Cardassia Prime.
+
+BASHIR
+Murder? She was a prisoner trying to escape. That's self-defense by any reasonable definition.
+
+ODO
+The Dominion doesn't recognize that distinction, Doctor. To them, Jem'Hadar lives are property of the Founders. Destroying property is theft. Killing a Vorta is... well, that they take personally.
+
+DAX
+What happens if we hand her over?
+
+SISKO
+Keevan was quite specific. She'll face tribunal on a Dominion world. The verdict is predetermined.
+
+(A heavy pause.)
+
+BASHIR
+Then we can't give her to them. It's that simple.
+
+ODO
+Nothing about this situation is simple.
+
+(He stands, activating a wall display that shows Mira's shuttle trajectory and recovered data fragments.)
+
+ODO (CONT'D)
+I've spent the last four hours verifying her story. The shuttle's warp signature is consistent with a Cardassian origin. The damage patterns suggest pursuit by Jem'Hadar attack ships. And the data she's provided...
+
+(He pauses, choosing his words carefully.)
+
+ODO (CONT'D)
+It's genuine. Ship deployments, supply routes, communication frequencies. All of it checks out against what we know.
+
+DAX
+That's exactly what worries me.
+
+BASHIR
+What do you mean?
+
+DAX
+(standing, moving to the display)
+Think about it. She escapes one of the most heavily guarded compounds in Dominion territory. She survives a pursuit through enemy space in a damaged shuttle. She happens to find her way to the one station where her story will receive a sympathetic hearing. And she's carrying intelligence that's exactly what Starfleet has been desperate to obtain.
+
+(She turns to face the others.)
+
+DAX (CONT'D)
+It's... perfect. Too perfect.
+
+BASHIR
+You think she's lying?
+
+DAX
+I think the Dominion has used elaborate deceptions before. The Founders are patient. They play long games.
+
+ODO
+I considered that possibility.
+
+SISKO
+And?
+
+ODO
+The physical evidence doesn't support it. Doctor Bashir's examination showed injuries consistent with prolonged captivity and recent escape. Malnutrition. Untreated fractures. Burns from what appear to be Jem'Hadar weapons.
+
+(He meets Bashir's eyes briefly.)
+
+ODO (CONT'D)
+No one voluntarily endures that kind of damage for a deception.
+
+BASHIR
+Thank you, Constable.
+
+ODO
+Don't thank me yet.
+
+(He sets down his PADD, folding his arms.)
+
+ODO (CONT'D)
+I believe she's genuine. I believe she escaped exactly as she claims. But that doesn't mean we can trust the intelligence she's brought us.
+
+SISKO
+Explain.
+
+ODO
+The Founders are shapeshifters, Captain. We understand patience in ways solids do not. If they suspected Mira might eventually flee, they could have seeded that compound with disinformation. Let her believe she was stealing secrets while actually feeding her exactly what they wanted us to have.
+
+(The implications settle over the room.)
+
+DAX
+A willing defector carrying unwitting poison.
+
+ODO
+Precisely.
+
+BASHIR
+That's... that's monstrous. Using her as a weapon without her knowledge.
+
+ODO
+Yes. It is.
+
+(Silence. SISKO moves from the viewport to the head of the table, placing both hands flat on its surface.)
+
+SISKO
+Let's set aside the intelligence question for a moment. We can analyze the data, cross-reference it, test it before we act on anything.
+
+(He looks around the table.)
+
+SISKO (CONT'D)
+The immediate question is simpler. A woman has come to this station requesting asylum. The Dominion wants to take her back and execute her. What do we do?
+
+BASHIR
+We protect her. That's what the Federation is supposed to stand for.
+
+DAX
+The Federation is also at war, Julian. Every decision we make has consequences beyond this station.
+
+BASHIR
+So we sacrifice one person because it's convenient?
+
+DAX
+I didn't say that.
+
+BASHIR
+(heated)
+Then what are you saying? That we should weigh her life against some... some strategic calculation?
+
+DAX
+I'm saying we need to think about what happens next. If we refuse extradition, we're openly defying the Dominion. That cruiser out there could be the first of many.
+
+ODO
+The Dominion won't risk open conflict over one woman. Not yet. The war isn't going well enough for them to waste resources on a punitive strike.
+
+DAX
+You're certain of that?
+
+ODO
+(a beat)
+Reasonably certain.
+
+SISKO
+What about Cardassia? This woman is half-Cardassian, and she's carrying intelligence stolen from a high-ranking Cardassian official.
+
+ODO
+Dukat hasn't made any public statements. In fact, there's been no official acknowledgment from the Cardassian government that Mira Dukat exists at all.
+
+DAX
+Which tracks with what she told us. He's kept her hidden her entire life.
+
+BASHIR
+She's his daughter, and he's pretending she doesn't exist. The man's worse than I thought.
+
+SISKO
+She's his weakness, Doctor. His vulnerability. In Cardassian culture, an illegitimate child with a Bajoran mother isn't just an embarrassment. It's evidence of... what did she call it?
+
+ODO
+Collaboration with inferiors. Dukat's entire political position depends on presenting himself as a champion of Cardassian superiority. Mira contradicts that narrative simply by existing.
+
+(SISKO straightens, moving slowly around the table.)
+
+SISKO
+So we have a woman who's been kept prisoner by her own father since childhood. Who was handed over to the Dominion as... what? A gift? A gesture of loyalty?
+
+ODO
+That's the implication.
+
+SISKO
+And now she's escaped, carrying information that could help us in this war, and the Dominion wants her back so they can execute her for the crime of wanting to be free.
+
+(He stops, looking out the viewport at the Dominion ship.)
+
+SISKO (CONT'D)
+I keep asking myself... does it matter who her father is?
+
+BASHIR
+It shouldn't.
+
+DAX
+But it does. To some people.
+
+SISKO
+Does it matter to you, old man?
+
+DAX
+(considering)
+Curzon would have said yes. He had... complicated feelings about Cardassians after the occupation. But Jadzia...
+
+(She shakes her head.)
+
+DAX (CONT'D)
+No. Children aren't responsible for their parents' sins. That's a principle worth defending, regardless of who it protects.
+
+SISKO
+Constable?
+
+ODO
+I don't make decisions based on bloodlines, Captain. I make them based on evidence. And the evidence tells me she's a victim, not a threat.
+
+(A beat.)
+
+ODO (CONT'D)
+Whether her intelligence is trustworthy is a separate question.
+
+SISKO
+Doctor?
+
+BASHIR
+I've treated her injuries. I've seen the scars—physical and psychological. Whatever else she might be, she's a person who's suffered terribly and is asking us for help. I don't know how we can call ourselves the good guys if we turn her away.
+
+(SISKO nods slowly, then moves back to his place at the head of the table.)
+
+SISKO
+The Dominion is demanding we return her. Starfleet Command hasn't issued any guidance yet, and by the time they do, Keevan's deadline will have passed.
+
+DAX
+So it's your call.
+
+SISKO
+It's my call.
+
+(He takes a breath, squaring his shoulders.)
+
+SISKO (CONT'D)
+I'm not in the habit of handing people over to be executed. I don't intend to start now.
+
+BASHIR
+(relieved)
+Thank God.
+
+SISKO
+But I'm not blind to the risks. Dax, I want you to go over every piece of intelligence she's provided. Cross-reference it with everything we have. If there's even a hint of disinformation, I want to know about it before we act on anything.
+
+DAX
+Understood.
+
+SISKO
+Odo, double the security presence around her quarters. If the Dominion decides to take matters into their own hands, I want us ready.
+
+ODO
+Already done.
+
+SISKO
+Doctor, continue monitoring her condition. And...
+
+(He hesitates.)
+
+BASHIR
+Sir?
+
+SISKO
+Talk to her. Not as a doctor—as a person. She's been alone for a very long time. That kind of isolation leaves marks that don't show up on medical scans.
+
+BASHIR
+(quietly)
+Yes, sir.
+
+(SISKO looks around the table one final time.)
+
+SISKO
+The Dominion wants us to make a decision based on fear. Fear of their ships, their soldiers, their retribution.
+
+(His voice hardens.)
+
+SISKO (CONT'D)
+I've made my decision based on something else. Now let's make sure we can live with the consequences.
+
+(He straightens.)
+
+SISKO (CONT'D)
+Dismissed.
+
+(The officers rise. DAX catches BASHIR's arm as he turns to leave.)
+
+DAX
+Julian... be careful.
+
+BASHIR
+Careful of what?
+
+DAX
+Of getting too close. If Odo's right—if she's carrying disinformation
+
+END OF ACT II
+
+---
+
+**ACT III**
+
+FADE IN:
+
+INT. INFIRMARY - NIGHT
+
+(The infirmary is quiet, most of the lights dimmed to night cycle. MIRA DUKAT sits on the edge of a biobed, dressed now in simple civilian clothes—a Bajoran transport worker's tunic. A small bag rests beside her. SISKO enters, PADD in hand, his expression resolute but weary.)
+
+SISKO
+The Council's response came through an hour ago. Starfleet's backing my decision.
+
+(He sets the PADD down on a nearby console.)
+
+SISKO (CONT'D)
+You have asylum, Miss Dukat. Full Federation protection.
+
+MIRA
+(quiet)
+And the Vorta?
+
+SISKO
+Weyoun is... displeased. He's threatened to lodge a formal protest with the Federation Council. Implied there would be consequences.
+
+MIRA
+Implied.
+
+SISKO
+The Dominion rarely makes explicit threats. They prefer to let imagination do the work.
+
+(MIRA nods slowly, her hand moving to the bag beside her.)
+
+MIRA
+What happens now? Debriefings? Starfleet Intelligence picking apart everything I know about my father's operations?
+
+SISKO
+Eventually. There's no rush. Doctor Bashir tells me you need at least another week of recovery before—
+
+MIRA
+Commander.
+
+(She looks up at him, and there's something settled in her eyes—a decision already made.)
+
+MIRA (CONT'D)
+I'm leaving tonight.
+
+SISKO
+(beat)
+I'm sorry?
+
+MIRA
+There's a Bajoran transport departing for the Valo system in forty minutes. I've arranged passage.
+
+SISKO
+Miss Dukat, the intelligence you're carrying—
+
+MIRA
+Will die with me if I choose. Isn't that right?
+
+(SISKO's jaw tightens. He moves closer, his voice lowering.)
+
+SISKO
+Do you understand what you're giving up? The tactical data in your possession could save thousands of lives. Federation lives. Bajoran lives.
+
+MIRA
+Or it could be a trap. Isn't that what you suspected from the beginning?
+
+SISKO
+I've had time to reconsider.
+
+MIRA
+(small, sad smile)
+Have you? Or have you just decided the potential reward outweighs the risk?
+
+(SISKO doesn't answer immediately. He pulls a chair closer and sits, meeting her at eye level.)
+
+SISKO
+Why did you come here?
+
+MIRA
+I told you. I was running.
+
+SISKO
+You could have run anywhere. The Badlands. Trill. A dozen neutral ports where no one would have looked twice at another refugee.
+
+(Beat.)
+
+SISKO (CONT'D)
+But you came to Deep Space Nine. To a Bajoran station. To Major Kira's station.
+
+MIRA
+(looking away)
+Maybe I wanted to see it. The place my father couldn't break.
+
+SISKO
+Or maybe you wanted to be seen. By people who knew what he was.
+
+(MIRA's composure cracks slightly. She blinks rapidly.)
+
+MIRA
+I spent my whole life being invisible. The secret daughter. The mistake he visited twice a year when my mother could be... persuaded... to allow it.
+
+(She laughs bitterly.)
+
+MIRA (CONT'D)
+Do you know what he used to tell me? That I was his contingency. His insurance policy. One day, when I was old enough, I'd be useful.
+
+SISKO
+But you chose to be something else.
+
+MIRA
+I chose to steal his secrets and run. That's not heroism, Commander. That's spite dressed up in moral clothing.
+
+SISKO
+I've seen spite. This isn't it.
+
+(He leans forward.)
+
+SISKO (CONT'D)
+The data you have—I'm not going to pretend it doesn't matter. It does. The war is real, and people are dying. Every day.
+
+MIRA
+I know.
+
+SISKO
+But I won't force you to be an intelligence asset. That's not who we are.
+
+(He stands, straightening his uniform.)
+
+SISKO (CONT'D)
+If you want to leave, I won't stop you. But I'm asking you to reconsider. Not for the Federation. Not for strategy.
+
+(Beat.)
+
+SISKO (CONT'D)
+For the people that information might protect.
+
+MIRA
+(long pause)
+My father said something similar once. About the Occupation. He said everything he did was to protect people. Cardassian people. His people.
+
+(She picks up her bag.)
+
+MIRA (CONT'D)
+I've spent my whole life watching that logic destroy everything it touched. I won't become another version of it.
+
+SISKO
+That's not what I'm asking.
+
+MIRA
+Isn't it?
+
+(She stands, facing him.)
+
+MIRA (CONT'D)
+If I stay, I become a weapon. A source. Something to be mined for advantage. And when the mining is done, what then? A quiet apartment on Earth? A new name? A lifetime of looking over my shoulder?
+
+SISKO
+We would protect you.
+
+MIRA
+From the Dominion? From the Cardassians? From everyone who'd want to use me or kill me for what I know?
+
+(She shakes her head.)
+
+MIRA (CONT'D)
+You can't protect me from what I am, Commander. From whose blood runs in my veins.
+
+(SISKO is silent for a long moment.)
+
+SISKO
+Where will you go?
+
+MIRA
+Somewhere quiet. Somewhere my name doesn't mean anything.
+
+(She moves toward the door, then pauses.)
+
+MIRA (CONT'D)
+The data... it's real. Everything I told you about troop movements, supply lines, the listening posts in the Chin'toka sector. All of it.
+
+SISKO
+Then why—
+
+MIRA
+Because if you act on it, they'll know it came from me. And they'll never stop hunting. But if I disappear... if the information never surfaces... maybe they'll assume I died in the shuttle crash. Maybe they'll stop looking.
+
+SISKO
+And the people that intelligence could save?
+
+MIRA
+(quietly)
+Will have to be saved some other way.
+
+(She walks out. SISKO stands alone in the infirmary, the weight of her choice settling over him.)
+
+CUT TO:
+
+INT. CORRIDOR OUTSIDE AIRLOCK SEVEN - CONTINUOUS
+
+(MIRA walks quickly, her bag over her shoulder. The corridor is nearly empty at this hour. She reaches the airlock and pauses, her hand hovering over the access panel.)
+
+KIRA (O.S.)
+Leaving without saying goodbye?
+
+(MIRA turns. KIRA stands at the far end of the corridor, arms folded. For a long moment, neither speaks.)
+
+MIRA
+I didn't think you'd want one.
+
+KIRA
+(walking closer)
+You're probably right.
+
+(She stops a few feet away, studying MIRA's face.)
+
+KIRA (CONT'D)
+Bashir told me you're still recovering. That transport doesn't have medical facilities worth mentioning.
+
+MIRA
+I'll manage.
+
+KIRA
+Will you?
+
+(Beat.)
+
+MIRA
+Major... I know what my father did. Not the reports. Not the numbers. I know because he told me. Stories. Like bedtime tales for a child who was supposed to grow up to be just like him.
+
+(KIRA's expression hardens, but she doesn't interrupt.)
+
+MIRA (CONT'D)
+He talked about Bajor the way other fathers talk about... old victories. Fond memories. He was proud of what he did here.
+
+KIRA
+(through clenched teeth)
+I know.
+
+MIRA
+So when I say I understand why you can barely look at me... I mean it. I'm not asking for forgiveness. I'm not asking for anything.
+
+(She turns back to the airlock panel.)
+
+KIRA
+Then why did you come to me? In the holding cell. Why tell me any of it?
+
+MIRA
+(pausing)
+Because I needed someone to know. Someone who understood what he really was. Not the political officer or the military strategist or the charming diplomat. The monster underneath.
+
+(She looks back at KIRA.)
+
+MIRA (CONT'D)
+You were the only person on this station who could really see it. Because you lived it.
+
+(Long silence. KIRA's arms drop to her sides.)
+
+KIRA
+I spent fifteen years fighting Cardassians. Killing them. Hating them with everything I had.
+
+MIRA
+I know.
+
+KIRA
+And I was good at it. The hatred. It kept me alive. Kept me focused. Kept me from thinking too hard about the things I did in the name of freedom.
+
+(She takes a step closer.)
+
+KIRA (CONT'D)
+After the Occupation ended, I told myself the hatred would fade. That I'd learn to see Cardassians as... people. Individuals. Not just the face of everything I'd lost.
+
+MIRA
+Has it worked?
+
+KIRA
+(bitter laugh)
+Some days better than others.
+
+(Beat.)
+
+KIRA (CONT'D)
+When you walked onto this station, all I could see was him. Your father. Every time you spoke, every time you moved... I saw him.
+
+MIRA
+I'm sorry.
+
+KIRA
+Don't be. It's not your fault.
+
+(She moves closer still, her voice dropping.)
+
+KIRA (CONT'D)
+My mother was a collaborator. Did you know that?
+
+MIRA
+(surprised)
+No.
+
+KIRA
+She was a comfort woman for a Cardassian officer. She did it to protect my brothers and me. To keep us fed. And when she died... I hated her for it. For years.
+
+(Her voice catches slightly.)
+
+KIRA (CONT'D)
+I only learned the truth a few years ago. What she sacrificed. What it cost her.
+
+MIRA
+Major—
+
+KIRA
+The point is... I spent most of my life hating the wrong people for the wrong reasons. And I'm tired of it.
+
+(She meets MIRA's eyes.)
+
+KIRA (CONT'D)
+You're not him. I don't forgive him. I'll never forgive him.
+
+(Beat.)
+
+KIRA (CONT'D)
+But you... I see you.
+
+(MIRA's composure finally breaks. Tears slip
+
+END OF ACT III
+
+---
+
+TAG
+
+FADE IN:
+
+INT. SISKO'S QUARTERS - NIGHT
+
+Sisko sits at his desk, staring at a PADD containing Mira's incomplete intelligence report. Jake enters with a tray of food.
+
+JAKE
+You've been staring at that for an hour.
+
+SISKO
+(sets down PADD)
+We had a chance to gain an advantage in this war, and I let it walk away.
+
+JAKE
+Did you?
+
+SISKO
+(looks up)
+What do you mean?
+
+JAKE
+Maybe the advantage wasn't in the intelligence. Maybe it was in showing that we don't treat people like weapons just because it's convenient.
+
+(beat)
+
+Isn't that what we're fighting for?
+
+Sisko considers this, then nods slowly. Jake places a hand on his father's shoulder before leaving. Sisko picks up the PADD one last time, then deletes the file. He looks out the window at the stars—uncertain, but at peace with his choice.
+
+FADE OUT.
+
+FADE OUT.
+
+---
+
+END OF SHOW
