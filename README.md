@@ -209,9 +209,10 @@ Sonnet for validation and metadata). The teleplay and a JSON
 sidecar with the full outline+metadata are saved to
 `data/generated_episodes/`.
 
-**Two sample episodes ship in the repo:**
-- [`SAMPLE_TNG_The_Last_Voice_of_Kethani.txt`](data/generated_episodes/SAMPLE_TNG_The_Last_Voice_of_Kethani.txt) — 50,078 chars
-- [`SAMPLE_TOS_The_Blood_of_Kahless.txt`](data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt) — 48,595 chars
+**Three sample episodes ship in the repo, one per series:**
+- [`SAMPLE_TNG_The_Last_Voice_of_Kethani.txt`](data/generated_episodes/SAMPLE_TNG_The_Last_Voice_of_Kethani.txt) — TNG, 50,078 chars
+- [`SAMPLE_TOS_The_Blood_of_Kahless.txt`](data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt) — TOS, 48,595 chars
+- [`SAMPLE_DS9_Sins_of_the_Father.txt`](data/generated_episodes/SAMPLE_DS9_Sins_of_the_Father.txt) — DS9, 42,544 chars
 
 ### Ingest scripts
 
@@ -360,7 +361,7 @@ Full schema spec: `docs/ONTOLOGY.md`
 |--------|----------|-------|------------|--------|
 | TOS (all 3 seasons) | 80  | 29,316  | 472   | ✅ loaded + embedded |
 | TNG (all 7 seasons) | 176 | 70,544  | 2,143 | ✅ loaded + embedded |
-| DS9 (all 7 seasons) | 173 | 72,160  | ~1,000 | ✅ loaded (embedding in progress) |
+| DS9 (all 7 seasons) | 173 | 72,160  | ~1,000 | ✅ loaded + embedded |
 | TNG Films | 4 | — | — | Phase 3+ |
 | Voyager | 172 | — | — | Phase 4+ |
 

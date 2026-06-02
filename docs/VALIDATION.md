@@ -184,3 +184,160 @@ voiceover, tag scene) and having Python do deterministic stitching.
 Scene texts now land verbatim in the final output.
 
 ### Verdict: ✅ Episode Writer produces canon-faithful teleplays
+
+---
+
+## DS9 — Sisko (validated v0.3.0)
+
+### Test 1 — Domain question: Emissary duty
+
+**Question:** *"Captain, do you find the role of Emissary easier or harder than command?"*
+
+**Retrieved episodes:** `The Reckoning`, `Destiny`, `Rapture`,
+`The Dogs of War`, `Call to Arms`, `Accession` — exactly the
+canonical Emissary-arc episodes.
+
+**Response:** Sisko opened with "I never asked to be the Emissary.
+But for better or worse, that's what I am" — direct canon from
+"The Reckoning." Quoted "Where the Bajorans see the Emissary... I
+see a Starfleet Officer" verbatim from canon. Then reflected on
+Starfleet's discomfort with the religious framing — accurate
+characterization of the Sisko/Ross dynamic.
+
+**Token cost:** in=3,130 out=367 → ~$0.05 per turn.
+
+### Test 2 — Sample episode "Sins of the Father"
+
+The Episode Writer generated a 5-scene DS9 wartime story. Notable
+moments validated against canon:
+- Dax addressed as "old man" by Sisko (the actual canonical pet name)
+- Hideki-class shuttle (real Cardassian designation)
+- Casualty reports from the Seventh Fleet (correct Dominion War unit)
+- Validator caught that the premise's "secret daughter of Dukat"
+  conflicts with Ziyal's canonical uniqueness from "Indiscretion" S4
+  — recommended either reframing or setting pre-S4
+
+### Verdict: ✅ DS9 agent works as designed
+
+---
+
+## Final state (v0.3.0)
+
+```
+TOS  agent (Kirk):     ✅ retrieval, voice, refusal validated
+TNG  agent (Picard):   ✅ retrieval, voice, refusal validated
+DS9  agent (Sisko):    ✅ retrieval, voice, sample episode validated
+
+Episode Writer (TNG):  ✅ 50k char canon-faithful teleplay
+Episode Writer (TOS):  ✅ 48k char canon-faithful teleplay
+Episode Writer (DS9):  ✅ 42k char canon-faithful teleplay
+
+Combined Qdrant collection 'trek_lines': 170,993 embedded points
+Combined episode count: 429
+```
+
+All three series have validated character agents AND a sample
+generated episode. Ready for promotion.
+
+---
+
+## DS9 — Sisko (validated v0.3.0)
+
+### Test 1 — Domain question: Emissary duty
+
+**Question:** *"Captain, do you find the role of Emissary easier or harder than command?"*
+
+**Retrieved episodes:** `The Reckoning`, `Destiny`, `Rapture`,
+`The Dogs of War`, `Call to Arms`, `Accession` — exactly the
+canonical Emissary-arc episodes.
+
+**Response:** Sisko opened with "I never asked to be the Emissary.
+But for better or worse, that's what I am" — direct canon from
+"The Reckoning." Quoted "Where the Bajorans see the Emissary... I
+see a Starfleet Officer" verbatim from canon. Then reflected on
+Starfleet's discomfort with the religious framing — accurate
+characterization of the Sisko/Ross dynamic.
+
+**Token cost:** in=3,130 out=367 → ~$0.05 per turn.
+
+### Test 2 — Sample episode "Sins of the Father"
+
+The Episode Writer generated a 5-scene DS9 wartime story. Notable
+moments validated against canon:
+- Dax addressed as "old man" by Sisko (the actual canonical pet name)
+- Hideki-class shuttle (real Cardassian designation)
+- Casualty reports from the Seventh Fleet (correct Dominion War unit)
+- Validator caught that the premise's "secret daughter of Dukat"
+  conflicts with Ziyal's canonical uniqueness from "Indiscretion" S4
+  — recommended either reframing or setting pre-S4
+
+### Verdict: All three series agents work as designed
+
+---
+
+## Final state (v0.3.0)
+
+- TOS  agent (Kirk):     retrieval, voice, refusal validated
+- TNG  agent (Picard):   retrieval, voice, refusal validated
+- DS9  agent (Sisko):    retrieval, voice, sample episode validated
+- Episode Writer (TNG):  50k char canon-faithful teleplay
+- Episode Writer (TOS):  48k char canon-faithful teleplay
+- Episode Writer (DS9):  42k char canon-faithful teleplay
+
+Combined Qdrant collection 'trek_lines': 170,993 embedded points.
+Combined episode count: 429.
+
+All three series have validated character agents AND a sample
+generated episode. Ready for promotion.
+
+
+---
+
+## DS9 — Sisko (validated v0.3.0)
+
+### Test 1 — Domain question: Emissary duty
+
+**Question:** *"Captain, do you find the role of Emissary easier or harder than command?"*
+
+**Retrieved episodes:** `The Reckoning`, `Destiny`, `Rapture`,
+`The Dogs of War`, `Call to Arms`, `Accession` — exactly the
+canonical Emissary-arc episodes.
+
+**Response:** Sisko opened with "I never asked to be the Emissary.
+But for better or worse, that's what I am" — direct canon from
+"The Reckoning." Quoted "Where the Bajorans see the Emissary... I
+see a Starfleet Officer" verbatim from canon. Then reflected on
+Starfleet's discomfort with the religious framing — accurate
+characterization of the Sisko/Ross dynamic.
+
+**Token cost:** in=3,130 out=367 → ~$0.05 per turn.
+
+### Test 2 — Sample episode "Sins of the Father"
+
+The Episode Writer generated a 5-scene DS9 wartime story. Notable
+moments validated against canon:
+- Dax addressed as "old man" by Sisko (the actual canonical pet name)
+- Hideki-class shuttle (real Cardassian designation)
+- Casualty reports from the Seventh Fleet (correct Dominion War unit)
+- Validator caught that the premise's "secret daughter of Dukat"
+  conflicts with Ziyal's canonical uniqueness from "Indiscretion" S4
+  — recommended either reframing or setting pre-S4
+
+### Verdict: All three series agents work as designed
+
+---
+
+## Final state (v0.3.0)
+
+- TOS  agent (Kirk):     retrieval, voice, refusal validated
+- TNG  agent (Picard):   retrieval, voice, refusal validated
+- DS9  agent (Sisko):    retrieval, voice, sample episode validated
+- Episode Writer (TNG):  50k char canon-faithful teleplay
+- Episode Writer (TOS):  48k char canon-faithful teleplay
+- Episode Writer (DS9):  42k char canon-faithful teleplay
+
+Combined Qdrant collection 'trek_lines': 170,993 embedded points.
+Combined episode count: 429.
+
+All three series have validated character agents AND a sample
+generated episode. Ready for promotion.
