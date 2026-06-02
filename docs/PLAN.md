@@ -24,26 +24,22 @@ Plus a `canon_tier` property on every Episode (1=aired, 4=community, 5=AU).
 
 ## Phases
 
-### Phase 1 — Spike ✅ COMPLETE
-- [x] Project skeleton + docker-compose
-- [x] Scrape 5 TNG scripts, parser, loader, sample queries
-- [x] Neo4j Layer 1 schema validated
-- [x] picard_agent.py — graph-grounded character chatbot (full-context version)
-- [x] GitHub repo: https://github.com/Eric90403/star-trek-graph
+### Phase 1 — Full TNG Ingest ✅ COMPLETE
+- [x] Project skeleton, docker-compose, GitHub repo
+- [x] Screenplay parser (state machine: scene headings, cues, dialogue, parentheticals)
+- [x] Neo4j Layer 1 schema: Episode, Scene, Line, Character, Location, Ship
+- [x] All 176 TNG episodes fetched and loaded (st-minutiae.com, IDs 102–277)
+- [x] 70,544 lines · 2,143 characters · 8,813 scenes in Neo4j
+- [x] Cross-platform: Linux / macOS / Windows launchers + install scripts
+- [x] ARCHITECTURE.md, AGENTS.md, ONTOLOGY.md full documentation
 
-### Phase 1.5 — Full TNG Ingest ✅ COMPLETE
-- [x] All 176 TNG episodes fetched and loaded (IDs 102–277)
-- [x] 70,544 lines, 2,143 characters, 8,813 scenes in Neo4j
-- [x] Top character: Picard 13,763 lines
-- [x] ARCHITECTURE.md, AGENTS.md, PLAN.md updated
-
-### Phase 2 — GraphRAG Layer (next)
-- [ ] `src/embedder.py` — pull all lines from Neo4j with graph metadata,
-      embed with nomic-embed-text-v1.5 (local, $0), push to Qdrant `trek_lines`
-- [ ] `src/retriever.py` — semantic search + Neo4j graph expansion
-- [ ] `src/character_agent.py` — replace full-context dump with GraphRAG retrieval
-- [ ] Location normalization — `data/location_aliases.yaml` + re-load after full corpus decision
-- [ ] Validate: ask Picard questions, confirm answers are graph-grounded
+### Phase 2 — GraphRAG Layer ✅ COMPLETE
+- [x] `src/embedder.py` — Neo4j → Qdrant with full graph metadata as payload
+- [x] `src/retriever.py` — semantic search + Neo4j graph expansion (2-phase retrieval)
+- [x] `src/character_agent.py` — GraphRAG chatbot, ~3.5k tokens/turn vs 500k+
+- [x] `src/device_utils.py` — auto-detects CUDA / MPS / CPU across platforms
+- [ ] Location normalization — `data/location_aliases.yaml` (after DS9 decision)
+- [ ] Validate: test character agents across full corpus
 
 ### Phase 3 — Behavioral Models (Layer 2)
 - Claude-generated behavioral cards for top 20 characters

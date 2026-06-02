@@ -42,12 +42,13 @@ star-trek-graph/
 │   └── sample_queries.cypher  ← Neo4j Browser exploration queries
 │
 ├── src/
+│   ├── auth.py                ← cross-platform API key resolver
+│   ├── device_utils.py        ← auto-detects CUDA/MPS/CPU
 │   ├── parser.py              ← screenplay → structured JSON
 │   ├── loader.py              ← JSON → Neo4j (MERGE-based, idempotent)
-│   ├── picard_agent.py        ← Phase 1 character agent (full context)
-│   ├── embedder.py            ← (Phase 2) Neo4j → Qdrant embeddings
-│   ├── retriever.py           ← (Phase 2) GraphRAG retrieval
-│   └── character_agent.py     ← (Phase 2) GraphRAG character chatbot
+│   ├── embedder.py            ← Neo4j → Qdrant (graph metadata as payload)
+│   ├── retriever.py           ← GraphRAG: vector search + Neo4j expansion
+│   └── character_agent.py     ← GraphRAG character chatbot (the main agent)
 │
 ├── data/
 │   ├── raw/                   ← .gitignored — fetched .txt scripts

@@ -1,4 +1,4 @@
 #!/bin/bash
-# Launcher — runs the Picard agent using the project venv
+# Talk to Picard (alias for: ./trek --character PICARD)
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-exec "$DIR/.venv/bin/python" "$DIR/src/picard_agent.py" "$@"
+exec "$DIR/.venv/bin/python" "$DIR/src/character_agent.py" --character PICARD "$@"

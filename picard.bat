@@ -1,4 +1,3 @@
 @echo off
-REM picard.bat — Picard legacy agent launcher (Windows)
-REM Usage: picard [--character WORF]
-"%~dp0.venv\Scripts\python.exe" "%~dp0src\picard_agent.py" %*
+REM Talk to Picard (alias for: trek.bat --character PICARD)
+.venv\Scripts\python.exe src\character_agent.py --character PICARD %*
