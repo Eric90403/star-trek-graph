@@ -83,14 +83,22 @@ SPEAKER_FILTER_CYPHER = ENRICHMENT_CYPHER.replace(
     "WHERE size(l.text) > 3 AND speaker.canonical_name = $speaker",
 )
 
+SERIES_FILTER_CYPHER = ENRICHMENT_CYPHER.replace(
+    "WHERE size(l.text) > 3",
+    "WHERE size(l.text) > 3 AND e.series = $series",
+)
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def get_neo4j_lines(driver, speaker: str | None = None) -> list[dict]:
-    """Pull all lines with graph metadata."""
+def get_neo4j_lines(driver, speaker: str | None = None,
+                    series: str | None = None) -> list[dict]:
+    """Pull all lines with graph metadata, optionally filtered by speaker or series."""
     with driver.session() as session:
         if speaker:
             result = session.run(SPEAKER_FILTER_CYPHER, speaker=speaker.upper())
+        elif series:
+            result = session.run(SERIES_FILTER_CYPHER, series=series.upper())
         else:
             result = session.run(ENRICHMENT_CYPHER)
         return result.data()
@@ -156,10 +164,14 @@ def embed_and_load(args: argparse.Namespace) -> int:
     # 1. Pull lines from Neo4j
     print("Connecting to Neo4j...")
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
-    speaker_note = f" (speaker={args.speaker})" if args.speaker else ""
+    speaker_note = ""
+    if args.speaker:
+        speaker_note = f" (speaker={args.speaker})"
+    elif args.series:
+        speaker_note = f" (series={args.series})"
     print(f"Pulling lines from graph{speaker_note}...")
     t0 = time.time()
-    rows = get_neo4j_lines(driver, speaker=args.speaker)
+    rows = get_neo4j_lines(driver, speaker=args.speaker, series=args.series)
     driver.close()
     print(f"  {len(rows):,} lines retrieved in {time.time() - t0:.1f}s")
 
@@ -245,6 +257,8 @@ def main() -> int:
                     help="Count lines only, no embedding")
     ap.add_argument("--speaker",    type=str, default=None,
                     help="Embed one speaker only (e.g. PICARD)")
+    ap.add_argument("--series",     type=str, default=None,
+                    help="Embed one series only (e.g. TNG, TOS)")
     ap.add_argument("--batch-size", type=int, default=64,
                     help="Embedding batch size (default 64)")
     ap.add_argument("--reset",      action="store_true",
