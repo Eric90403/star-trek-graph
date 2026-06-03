@@ -5,6 +5,147 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] — 2026-06-02
+
+Page 1 of "The Last Voice of Kethani" — full 6-panel page from script
+to rendered comic page. Adds research-grounded tail rewrite,
+speaker-anchored placement, MiniMax M3 vision, and the Recraft V4.1
+art generation pipeline that was held back from v0.4.0.
+
+### Added — Page-builder pipeline
+- `scripts/build_page_1.py` — generates 6 contextually-grounded panels
+  for Page 1 of "The Last Voice of Kethani" (Captain's log → bridge
+  establishing → Worf at tactical → Data at ops → Picard+Riker
+  two-shot with Worf comm → Picard commands warp six). Each panel:
+  generate art (Recraft V4.1 with locked C-style anchor), vision
+  analysis (MiniMax M3), reading-order placement, balloon render,
+  page composition into 2x3 grid.
+- `data/poc_comic/stage3/PAGE_1.png` — the rendered Page 1 (1400×2165).
+- Per-panel artifacts: `p{1-6}_ART.png` (raw Recraft) and
+  `p{1-6}_FINAL.png` (with balloons).
+
+### Added — Research-grounded comic rendering
+- `data/COMIC_TECHNIQUES_RESEARCH.md` — synthesis from three parallel
+  research subagents covering tail construction (Comical-JS arcTail.ts),
+  open-source comic balloon implementations, and multi-balloon placement
+  algorithms (Klein, Campbell's Rule #3, Blambot, Chu PSO, Yang
+  layout). Replaces invention with citation. Sources:
+  blambot.com/pages/comic-book-grammar-tradition,
+  kleinletters.com/BalloonPlacement.html,
+  graphixly.com/blogs/news/balloon-placement-in-comics,
+  github.com/BloomBooks/comical-js,
+  eddiecampbell.blogspot.com/2007/02/last-word-in-speech-balloons_25.html
+- `data/COMIC_PIPELINE_DESIGN.md` — updated with §0 PRIORITY CALLOUT
+  ("Panel-level art is NOT assumed satisfactory") and §1 Pipeline flow
+  documenting the explicit order of operations.
+
+### Changed — Tail rendering (balloons.py)
+- Rewrote `_draw_smooth_tail` per Comical-JS arcTail.ts pattern. The
+  single closed polygon is now stroked as ONE continuous closed loop
+  (perimeter walk including the final closing segment back to start),
+  not two separate open Bezier curves. This was the root cause of the
+  "two diverging strokes that never converge" bug.
+- Tail length BOUNDED at MAX_TAIL_LENGTH=160px per BBP §4 ("80-120px
+  at 1400px canvas"). Previously tail length was proportional to
+  speaker distance, producing 800px+ tails that read as two parallel
+  lines on long distances.
+- Base width increased to 40px (was 28px) for visible taper.
+- Tip flat width 4px (was 0px) — Comical-JS BL-8331 workaround to
+  prevent stroke overshoot at zero-width tip.
+
+### Changed — Speaker-anchored placement (intelligence.py)
+- Replaced "horizontal bands by line index" zone generator with
+  `_speaker_zone_candidates` — fan of candidates ABOVE + TO THE SIDE
+  of each speaker's face_top, biased toward direction of MORE ROOM
+  (panel edge proximity). Sources: Klein "balloons above and away
+  from the speaker", Campbell's Rule #3.
+- Added `_face_top_points` helper — anchor now uses face_top (cx, y_top)
+  not face_center. This is the design decision in research §5 q2:
+  tail terminates at upper-forehead, not face center; prevents tail
+  tip landing inside speaker's eye.
+- Added `_listener_face_for_radio` — for off-panel speakers, biases
+  the balloon position toward the on-panel LISTENER (per BBP §3.3
+  convention). Eric confirmed this reintroduction was safe because
+  the inline `Speaker via Comms:` prefix decouples attribution from
+  spatial proximity.
+- Added Eddie Campbell test as hard veto: a placement is rejected if
+  the balloon would be closer to a non-speaker face than to the
+  intended speaker's face.
+- Added reading-order CONSTRAINT (not layout axis): bonus when current
+  balloon is below or right of prior; penalty when upper-left of prior.
+- Side-fallback candidates: when speaker is too high in panel for
+  "above" candidates, candidates extend laterally instead.
+- Top-edge candidates (BBP Rule 6 — "butt against panel edge") added
+  to all lines.
+- 20px gutter between balloons (was: exact-overlap check, allowed
+  visually touching balloons).
+- Removed full-panel grid fallback that papered over impossible
+  placements.
+
+### Changed — Vision via MiniMax M3 (intelligence.py)
+- Default vision model switched from `anthropic/claude-opus-4.5` to
+  `minimax/minimax-m3`. Opus was returning phantom face bboxes on
+  starfields/consoles and missing actual character faces on cel-shaded
+  comic art. MiniMax correctly identifies faces but reports a different
+  internal coordinate system.
+- Added coordinate-scale normalization: MiniMax reports a resampled
+  image dimension (e.g. 1920×1080) which differs from the actual file
+  (e.g. 2688×1536). All bboxes are now scaled from reported-coords to
+  actual-coords using PIL-read dimensions.
+- Added robust JSON extraction (balanced-brace scan over candidate
+  `{...}` regions in the response) for when MiniMax wraps prose around
+  its JSON. Includes markdown fence detection + first-parseable-block
+  fallback.
+- Added `reasoning_content` fallback for empty content responses.
+- Strengthened VISION_PROMPT with explicit one-shot JSON example and
+  "do not write any explanation, analysis, preamble" directive.
+
+### Changed — PanelScript (panel_script.py)
+- `lines=[]` (empty) is now allowed for art-only / establishing-shot
+  panels. The placer skips placement entirely; renderer copies art
+  straight to FINAL. Test updated to reflect this.
+
+### Added — Recraft V4.1 art generation (imagegen.py)
+- `src/comic/imagegen.py` — OpenRouter `recraft/recraft-v4.1-pro`
+  client. Generates panel art at 2K resolution (returns 2688×1536 PNG)
+  with `image_config.aspect_ratio: "16:9"`. Auto-transcodes Recraft's
+  WebP-in-PNG-named-file responses. Locked HOUSE_STYLE constant for
+  IDW Mike Johnson era look (chosen via 3-variant A/B/C test in v0.4.0
+  WIP). NO_TEXT suffix prevents Recraft from drawing its own balloons.
+
+### Added — Test infrastructure
+- `tests/test_intelligence_placer.py` — 16 unit tests for the new
+  reading-order placer covering face vetoes (the Stage 2 spiral's
+  bug specifically), radio balloon NOT pinned to listener, two-shot
+  speaker mapping, reading-order zones, Eddie Campbell test,
+  PlacementError contract. Synthetic-data only, no API calls, 0.12s.
+- `scripts/test_tail_audit.py` — synthetic 4-balloon tail rendering
+  test for visual regression on tail geometry.
+- `scripts/test_prompt_variants.py` — A/B/C Recraft prompt variant
+  generator (used in v0.4.0 WIP to lock the C-style anchor).
+- `scripts/test_two_shot.py`, `test_two_shot_wider.py` — two-shot
+  composition validation tests.
+- `scripts/regen_panels_2_and_5.py`, `validate_art_with_placer.py` —
+  Panel 2 + Panel 5 regeneration + placer validation harnesses.
+
+### Cost summary
+- v0.4.1 work cost ~$3.85 OpenRouter spend total (Stage 1 styles + 3
+  prompt variants + tight/wider two-shot tests + regen Panel 2/5 +
+  vision calls + Page 1 generation). Running total: ~$5.65 of $70.
+
+### Notes
+- Character likeness is unreliable in Recraft text-to-image without
+  reference images. Page 1 panels render generic Trek-crew silhouettes
+  for Worf (no Klingon ridges) and Data (no pale skin tone). Picard
+  is recognizable when shown. Future work: Recraft `reference_image`
+  with curated character reference shots, or switch to Flux Kontext Pro.
+- Stage 2 prior artwork purged per Eric's call: SAMPLE_TNG_..._PAGE_1.png
+  deleted (was the v0.4.0 sample of the broken Opus iteration pipeline).
+- The italic-radio-test renders from v0.4.0 moved into
+  `data/poc_comic/stage2/0.4.1_tests/` for archival.
+- The handoff doc `docs/HANDOFF_2026-06-02_Stage2.DEPRECATED.md` remains
+  in place as historical reference.
+
 ## [0.4.0] — 2026-06-02
 
 Comic pipeline Stage 2 design + radio-balloon italic + PanelScript.

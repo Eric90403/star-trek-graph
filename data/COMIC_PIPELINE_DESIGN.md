@@ -14,7 +14,63 @@ using [BBP §N] notation. No silent decisions.
 
 ---
 
-## 1. Design principles (from BBP + Eric's hard rules)
+## 0. PRIORITY CALLOUT — Panel-level art is NOT assumed satisfactory
+
+**Added 2026-06-02 per Eric.** The art is the foundation. Bad art = bad
+comic, regardless of balloon placement, prompt quality, or placer
+correctness. We are explicitly NOT assuming the current panel artwork
+is satisfactory — the Stage 2 spiral produced panels with vast white
+voids, characters small in the frame, and no bridge atmosphere.
+
+Tasks 5, 6, and 8 in the execution order (§11) are the panel-level art
+improvement work, not the placer work:
+
+- **Task 5 (Phase 1.2):** Rewrite the Recraft prompt. Kill "negative
+  space" / "empty area for balloons" language. Add composition density
+  directives (characters 50-60% of frame), bridge set dressing (LCARS
+  displays, console rail, viewscreen starfield), lighting specifics
+  (cool blue rim, warm amber turbolift), and mood keywords. Generate
+  3 variants for Eric to pick direction. ~$0.75.
+
+- **Task 6:** Regenerate Panel 2 + Panel 5 with the chosen prompt style.
+  ~$0.50.
+
+- **Task 8:** Run the full 3-scene test matrix (A: Picard alone + comm /
+  B: two-shot + comm / C: 3+ character wide shot) — each scene runs
+  through art generation with the new prompt, vision analysis, placer,
+  and render. ~$1.75.
+
+**If the new prompt fails on first try, we iterate on the prompt until
+the art is right, BEFORE proceeding to balloon work on real panels.**
+We do not paper over bad art with balloon placement.
+
+Tasks 3 (placer rewrite) and 4 (face-veto tests) are code-only with
+no API calls. They can be written in parallel with art work, but the
+real-pipeline validation (Task 7+) waits for approved art.
+
+---
+
+## 1. Pipeline flow — the order of operations
+
+For each panel in a scene:
+
+  1. **Generate the artwork** (Task 5 prompt) → art image on disk
+  2. **Vision analysis** → face/body bboxes, existing balloons
+  3. **Place balloons** (Task 3 placer) using PanelScript + analysis
+  4. **Render** balloons onto the art → final panel image
+  5. **Visual review** by Eric → approve or iterate
+
+The "candidate zones" in the design refer to balloon candidate
+POSITIONS within an already-generated panel. The art itself is not
+candidates — it's the canvas the balloons sit on. The art is generated
+first and is immutable for a given run; only the balloons move.
+
+Art improvement is in scope and is a HIGH priority (see §0 above). The
+new prompt + 3-variant test matrix is exactly that work.
+
+---
+
+## 2. Design principles (from BBP + Eric's hard rules)
 
 These are the principles that govern the design:
 
@@ -30,7 +86,7 @@ These are the principles that govern the design:
 
 ---
 
-## 2. Data model — `PanelScript`
+## 3. Data model — `PanelScript`
 
 **New module:** `src/comic/panel_script.py`
 
@@ -85,7 +141,7 @@ unique `order` values — validated at construction.
 
 ---
 
-## 3. Reading-order placer — algorithm
+## 4. Reading-order placer — algorithm
 
 **Module:** `src/comic/intelligence.py` (modify existing)
 
@@ -171,7 +227,7 @@ face-overlap veto, no exemption).
 
 ---
 
-## 4. Face-veto system — concrete pixel checks
+## 5. Face-veto system — concrete pixel checks
 
 **Existing (in `intelligence.py`):**
 - `face_bboxes: List[Tuple[int, int, int, int]]` — (x, y, x+w, y+h) in image coords
@@ -228,7 +284,7 @@ def tail_crosses_face(
 
 ---
 
-## 5. Face-veto unit tests — `tests/test_face_veto.py` (NEW)
+## 6. Face-veto unit tests — `tests/test_face_veto.py` (NEW)
 
 **Coverage (from BBP §3 + Stage 2 Revised Plan §2.4):**
 
@@ -266,7 +322,7 @@ Verify a hard safety guarantee independent of AI vision.
 
 ---
 
-## 6. Radio balloon update — italics added
+## 7. Radio balloon update — italics added
 
 **Module:** `src/comic/balloons.py` (modify existing `_draw_radio_balloon`)
 
@@ -322,7 +378,7 @@ body, inline tag. Reader can't miss it.
 
 ---
 
-## 7. Recraft prompt rewrite
+## 8. Recraft prompt rewrite
 
 **Module:** `src/comic/imagegen.py` (modify `HOUSE_STYLE` + add structured
 prompt builder)
@@ -393,7 +449,7 @@ prompt than a Picard-alone receiving comm. The structured builder takes
 
 ---
 
-## 8. Recraft prompt test matrix (Phase 1.2)
+## 9. Recraft prompt test matrix (Phase 1.2)
 
 **Three prompt variants for the same Panel 2 scene (Picard + Worf comm):**
 
@@ -417,7 +473,7 @@ prompt than a Picard-alone receiving comm. The structured builder takes
 
 ---
 
-## 9. Orchestrator update — `scripts/render_panel_poc.py`
+## 10. Orchestrator update — `scripts/render_panel_poc.py`
 
 **Current:** Reads hardcoded dialogue, orchestrates art + vision + balloon
 placer. The combadge-anchor logic is in the radio balloon path.
@@ -476,7 +532,7 @@ position is determined by reading order, not by a pixel.
 
 ---
 
-## 10. Three-scene test matrix (Phase 4.1-4.2)
+## 11. Three-scene test matrix (Phase 4.1-4.2)
 
 | Scene | Difficulty | Characters | Balloons | Tests |
 |-------|-----------|------------|----------|-------|
@@ -502,7 +558,7 @@ position is determined by reading order, not by a pixel.
 
 ---
 
-## 11. Execution order — narrow, specific tasks
+## 12. Execution order — narrow, specific tasks
 
 | # | Task | Output | Cost | Check-in |
 |---|------|--------|------|----------|
@@ -522,7 +578,7 @@ of $70 budget.
 
 ---
 
-## 12. What's explicitly NOT in this design
+## 13. What's explicitly NOT in this design
 
 - **Stage 3 page composition** — out of scope. We get to Stage 3 only
   after Phase 5 approval gate.
@@ -541,7 +597,7 @@ of $70 budget.
 
 ---
 
-## 13. Risks and how we mitigate them
+## 14. Risks and how we mitigate them
 
 | Risk | Mitigation |
 |------|------------|
@@ -554,7 +610,7 @@ of $70 budget.
 
 ---
 
-## 14. Sign-off
+## 15. Sign-off
 
 This design proposal maps to:
 - `data/STAGE2_REVISED_PLAN.md` Phases 1-5

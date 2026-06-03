@@ -56,9 +56,15 @@ def test_construction_with_speaker_positions():
 
 # ── Validation (sad path) ───────────────────────────────────────────────────
 
-def test_empty_lines_rejected():
-    with pytest.raises(ValueError, match="at least one line"):
-        PanelScript(scene="X", panel_id="y", lines=[])
+def test_empty_lines_allowed_for_art_only_panels():
+    """Empty `lines` is allowed for art-only / establishing-shot panels.
+    The placer skips placement entirely for these (the renderer just
+    copies the art straight to FINAL)."""
+    script = PanelScript(scene="Establishing shot", panel_id="p1", lines=[])
+    assert script.lines == []
+    assert script.sorted_lines() == []
+    assert script.radio_lines() == []
+    assert script.normal_lines() == []
 
 def test_duplicate_order_rejected():
     with pytest.raises(ValueError, match="duplicate order"):

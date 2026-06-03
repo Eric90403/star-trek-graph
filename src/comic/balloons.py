@@ -367,45 +367,91 @@ def _tail_attach_point(cx, cy, bw, bh, anchor):
 
 def _draw_smooth_tail(draw, balloon_center, bw, bh, anchor, off_panel=False):
     """Smooth tapered tail from balloon to anchor.
-    Per Blambot: terminates at ~50-60% toward speaker mouth."""
+
+    Implementation: single closed polygon flattened from two Bezier
+    curves sharing a tip point. The polygon is filled and stroked as
+    ONE shape — comical-js arcTail.ts pattern, ported to PIL.
+
+    Per Blambot (BBP §4): tail length ~80-120px at 1400px canvas.
+    Tail does NOT extend all the way to the speaker — only ~50-60%
+    of the way; the eye completes the connection. This means tail
+    length is BOUNDED, not proportional to distance to speaker.
+
+    Sources: data/COMIC_TECHNIQUES_RESEARCH.md §2.
+    """
     cx, cy = balloon_center
     ax, ay = anchor
     edge_x, edge_y, perp_x, perp_y = _tail_attach_point(cx, cy, bw, bh, anchor)
 
-    # Tail tip is at 55% of the way from edge to anchor (don't touch speaker)
-    tip_x = edge_x + (ax - edge_x) * 0.55
-    tip_y = edge_y + (ay - edge_y) * 0.55
+    # ── Tail dimensions (industry-spec, BBP §4) ─────────────────────────
+    # At 2K source canvas (1456-2000px wide), tail length 100-160px and
+    # base width 35-50px gives the proportions used in published comics.
+    # This is also what makes the taper VISIBLE: a 14px base half-width
+    # tapering over 800px reads as two parallel lines, not a teardrop.
+    MAX_TAIL_LENGTH = 160     # cap at 160px regardless of speaker distance
+    BASE_HALF_WIDTH = 20      # 40px total at base = pronounced taper
 
-    # Tail base is wider at attachment to bubble, narrows toward tip
-    base_half = 14
-    bp1 = (edge_x + perp_x * base_half, edge_y + perp_y * base_half)
-    bp2 = (edge_x - perp_x * base_half, edge_y - perp_y * base_half)
+    # Direction from edge to anchor, then cap the length.
+    dx, dy = ax - edge_x, ay - edge_y
+    full_dist = math.hypot(dx, dy)
+    desired_length = min(full_dist * 0.55, MAX_TAIL_LENGTH)
+    if full_dist < 1.0:
+        return  # nothing to draw
+    nx, ny = dx / full_dist, dy / full_dist
+    tip_x = edge_x + nx * desired_length
+    tip_y = edge_y + ny * desired_length
 
-    # Curve control point — slight jog perpendicular
+    # Tail base anchors on balloon outline.
+    bp1 = (edge_x + perp_x * BASE_HALF_WIDTH, edge_y + perp_y * BASE_HALF_WIDTH)
+    bp2 = (edge_x - perp_x * BASE_HALF_WIDTH, edge_y - perp_y * BASE_HALF_WIDTH)
+
+    # Bezier control point — slight curve for organic feel.
     mid_x = (edge_x + tip_x) / 2
     mid_y = (edge_y + tip_y) / 2
-    jog_amp = 6 if not off_panel else 0
+    jog_amp = 4 if not off_panel else 0
     rng = random.Random(int(ax * 17 + ay * 31) & 0xFFFF)
     jog_sign = 1 if rng.random() > 0.5 else -1
     ctrl_x = mid_x + perp_x * jog_amp * jog_sign
     ctrl_y = mid_y + perp_y * jog_amp * jog_sign
 
-    # Two Bezier curves: bp1 → tip and bp2 → tip
-    left  = _quadratic_bezier(bp1, (ctrl_x, ctrl_y), (tip_x, tip_y), steps=14)
-    right = _quadratic_bezier(bp2, (ctrl_x, ctrl_y), (tip_x, tip_y), steps=14)
+    # Tip flat width — small but visible (3-4px) so the two perimeter
+    # strokes converge cleanly without overshooting. Strictly zero-width
+    # tip causes PIL to render two diverging strokes.
+    TIP_FLAT_HALF = 2.0
+    tail_axis_x = tip_x - edge_x
+    tail_axis_y = tip_y - edge_y
+    tail_len = max(1.0, math.hypot(tail_axis_x, tail_axis_y))
+    tip_perp_x = -tail_axis_y / tail_len
+    tip_perp_y = tail_axis_x / tail_len
+    tip_left  = (tip_x + tip_perp_x * TIP_FLAT_HALF, tip_y + tip_perp_y * TIP_FLAT_HALF)
+    tip_right = (tip_x - tip_perp_x * TIP_FLAT_HALF, tip_y - tip_perp_y * TIP_FLAT_HALF)
 
-    # Fill tail with white (balloon fill)
+    # Two Bezier curves: bp1 → tip_left, bp2 → tip_right.
+    left  = _quadratic_bezier(bp1, (ctrl_x, ctrl_y), tip_left,  steps=20)
+    right = _quadratic_bezier(bp2, (ctrl_x, ctrl_y), tip_right, steps=20)
+
+    # Single closed polygon: left curve + reversed right curve.
     polygon = left + list(reversed(right))
+
+    # Fill with white (balloon body color).
     draw.polygon(polygon, fill=BALLOON_FILL)
 
-    # Outline the two curves
-    for curve in (left, right):
-        for i in range(len(curve) - 1):
-            draw.line([curve[i], curve[i + 1]],
-                       fill=BALLOON_OUTLINE, width=OUTLINE_W)
+    # Stroke the polygon perimeter as a SINGLE closed loop (including
+    # the closing segment from last point back to first). This is the
+    # key fix: drawing one closed loop instead of two open curves.
+    perimeter = list(polygon)
+    for i in range(len(perimeter)):
+        next_i = (i + 1) % len(perimeter)
+        draw.line([perimeter[i], perimeter[next_i]],
+                  fill=BALLOON_OUTLINE, width=OUTLINE_W)
 
-    # Cover the seam where tail meets balloon by re-drawing inner fill
-    # (this hides the chord that would otherwise show)
+    # Cover the base chord (between bp1 and bp2) with fill color so the
+    # balloon's own outline can be drawn over it on a later pass to
+    # create a continuous balloon+tail silhouette. The caller must draw
+    # the balloon outline AFTER calling this tail function (current
+    # _draw_normal_balloon does balloon-then-tail, so this is what makes
+    # the seam disappear: the tail polygon outline IS drawn at the base
+    # then the balloon outline is on top of it).
     draw.line([bp1, bp2], fill=BALLOON_FILL, width=OUTLINE_W + 2)
 
 

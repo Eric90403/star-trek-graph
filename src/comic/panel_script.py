@@ -120,8 +120,8 @@ class PanelScript:
     speaker_positions: Optional[Dict[str, str]] = None
 
     def __post_init__(self):
-        if not self.lines:
-            raise ValueError(f"PanelScript '{self.panel_id}' must have at least one line")
+        # Note: empty `lines` is allowed (art-only / establishing-shot panels).
+        # The placer skips placement entirely for these.
         orders = [line.order for line in self.lines]
         if len(orders) != len(set(orders)):
             from collections import Counter
