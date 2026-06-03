@@ -13,44 +13,94 @@
 [![CI](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml/badge.svg)](https://github.com/Eric90403/star-trek-graph/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-green.svg)](CHANGELOG.md)
+[![Version 0.4.1](https://img.shields.io/badge/version-0.4.1-green.svg)](CHANGELOG.md)
 [![Built with Hermes Agent](https://img.shields.io/badge/built%20with-Hermes%20Agent-blueviolet)](https://hermes-agent.nousresearch.com)
 
 > "The sky's the limit." — Jean-Luc Picard, *All Good Things...*
 
-A knowledge graph of every line ever spoken in *Star Trek: The Original
-Series*, *Star Trek: The Next Generation*, and *Star Trek: Deep Space
-Nine* — 429 episodes, ~172,000 dialogue lines — powering GraphRAG-grounded
-character chatbots and a multi-agent **Episode Writer** that generates
-brand-new canon-faithful teleplays. All running locally, with embeddings
-at $0 cost.
+**An end-to-end Star Trek comic-book creation platform.** From a one-sentence
+premise, the system retrieves canon dialogue from a 429-episode knowledge
+graph, drafts a full teleplay through a four-agent writer's room, and
+renders it as a publishable comic book page — art, balloons, captions,
+and reading-order layout all generated automatically.
 
-**Created with [Hermes Agent](https://hermes-agent.nousresearch.com) on Ubuntu
-(kernel 7.0.0-15-generic)**
+![Page 1 of "The Last Voice of Kethani"](data/poc_comic/stage3/PAGE_1.png)
 
-> This project was designed and built interactively with
-> [Hermes Agent](https://hermes-agent.nousresearch.com) running Claude Opus on
-> Ubuntu. The architecture, code, and documentation were all generated in a
-> single session.
+*Page 1 of "The Last Voice of Kethani" — generated end-to-end by the
+platform from premise → teleplay → 6-panel comic page. Art via Recraft
+V4.1 in modern IDW Mike Johnson era style, balloon placement via a
+research-grounded reading-order placer, vision analysis via MiniMax M3,
+panel layout via the project's own page composer. See*
+[`scripts/build_page_1.py`](scripts/build_page_1.py) *and*
+[`data/COMIC_TECHNIQUES_RESEARCH.md`](data/COMIC_TECHNIQUES_RESEARCH.md)
+*for the design rationale.*
 
 ---
 
-## What is this?
+## The platform
 
-Three things in one repo:
+**Story creation** (stable):
 
 | Component | What it does |
 |-----------|-------------|
-| **Knowledge Graph** | 176 TNG + 80 TOS + 173 DS9 episodes loaded into Neo4j. Episodes, scenes, lines, characters, locations, ships — all connected. |
-| **Character Chatbots** | Talk to Picard, Kirk, Sisko, Spock, Worf, Data, Quark, or any of ~3,000 characters. The LLM is grounded *exclusively* in canon dialogue + extracted behavioral cards — no hallucinated backstory. |
-| **Episode Writer** | Multi-agent writer's room (Showrunner → Canon Validator → Scene Writers → Director) that generates full canon-faithful teleplays from a one-sentence premise. Two sample episodes ship in `data/generated_episodes/`. |
+| **Knowledge Graph** | 176 TNG + 80 TOS + 173 DS9 episodes loaded into Neo4j. Episodes, scenes, lines, characters, locations, ships — all connected. ~172,000 dialogue lines, ~3,000 characters. |
+| **Character Chatbots** | Talk to Picard, Kirk, Sisko, Spock, Worf, Data, Quark, or any character. The LLM is grounded *exclusively* in canon dialogue + extracted behavioral cards — no hallucinated backstory. |
+| **Episode Writer** | Multi-agent writer's room (Showrunner → Canon Validator → Scene Writers → Director) that generates full canon-faithful teleplays from a one-sentence premise. |
 | **Browse Mode** | `./trek-browse` — explore the corpus stats, character relationships, and longest speeches without an API key. |
 
-The trick is **GraphRAG** (Retrieval-Augmented Generation from a graph):
-instead of dumping 500,000 tokens of dialogue into the context window,
-the system embeds your question, retrieves the 40 most semantically
-relevant lines from Qdrant, then expands those into structural episode
-context from Neo4j. ~3,500 tokens per turn instead of 500,000+.
+**Comic book creation** (beta — v0.4.1):
+
+| Component | What it does |
+|-----------|-------------|
+| **Page builder** | `scripts/build_page_1.py` turns a generated teleplay into a 6-panel comic page. Story-grounded prompts, contextual panel art, balloons placed by reading-order algorithm. |
+| **Recraft V4.1 art pipeline** | OpenRouter-backed `recraft/recraft-v4.1-pro` client (`src/comic/imagegen.py`). 2K resolution panels in locked IDW Mike Johnson era style. |
+| **MiniMax M3 vision** | Faces, bodies, combadges, and empty-region detection. Bbox coordinates scaled from model-reported to actual image dims. |
+| **Reading-order placer** | `src/comic/intelligence.py::place_balloons_for_panel`. Speaker-anchored placement per Klein/Blambot/Campbell. Eddie Campbell's Rule #3 as hard veto. Face protection as absolute hard veto. |
+| **Balloon renderer** | `src/comic/balloons.py`. Pure-white rounded-rect speech balloons with curved tapered tails (Comical-JS arcTail.ts pattern). Double-outline radio balloons with inline `Speaker via Comms:` prefix in red + italic body — no tail (modern IDW Trek convention). Cyan italic caption boxes for Captain's Log. ALL CAPS in Komika Text. |
+| **Page composer** | 2x3 / 3x2 / Watchmen 3x3 grid layouts at 1400px page width per Blambot industry specs. |
+
+See [`data/COMIC_PIPELINE_DESIGN.md`](data/COMIC_PIPELINE_DESIGN.md) for
+the full pipeline design and [`data/COMIC_TECHNIQUES_RESEARCH.md`](data/COMIC_TECHNIQUES_RESEARCH.md)
+for the research synthesis. Sources include Blambot's industry-standard
+lettering reference, Todd Klein's placement guide, Comical-JS (the
+production-grade open-source comic balloon implementation), and four
+academic papers on automated comic layout.
+
+**Known limitations of the beta:** Recraft text-to-image without
+reference images cannot reliably deliver specific actor likenesses.
+Page 1 renders Worf as a generic human (no Klingon ridges) and Data
+without his android skin tone. Picard is consistently recognizable.
+Future work: Recraft `reference_image` with curated character refs,
+or migration to Flux Kontext Pro.
+
+---
+
+## Sample episodes
+
+Three full-length canon-faithful teleplays ship in the repo, one per
+series, generated by the Episode Writer:
+
+| Series | Episode | Premise | File |
+|--------|---------|---------|------|
+| TNG | "The Last Voice of Kethani" | Picard discovers a derelict ship containing the only surviving consciousness of an extinct civilization, who pleads to be uploaded into the ship's computer. | [`data/generated_episodes/SAMPLE_TNG_The_Last_Voice_of_Kethani.txt`](data/generated_episodes/SAMPLE_TNG_The_Last_Voice_of_Kethani.txt) |
+| TOS | "The Blood of Kahless" | Kirk encounters a Federation colony that has adopted Klingon practices for survival, forcing him to decide whether to honor their autonomy or intervene. | [`data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt`](data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt) |
+| DS9 | "Sins of the Father" | Sisko investigates when a Bajoran spiritual leader claims the Prophets have given him a vision that contradicts Federation policy. | [`data/generated_episodes/SAMPLE_DS9_Sins_of_the_Father.txt`](data/generated_episodes/SAMPLE_DS9_Sins_of_the_Father.txt) |
+
+Each ~50,000 character teleplay was generated for ~$1.20-$1.75 in API
+spend (Opus for creative passes, Sonnet for validation and metadata).
+Page 1 of "The Last Voice of Kethani" (shown above) was then rendered
+as a comic page for an additional ~$1.80.
+
+---
+
+## How it works
+
+**GraphRAG** (Retrieval-Augmented Generation from a graph) is the
+trick: instead of dumping 500,000 tokens of dialogue into the context
+window, the system embeds your question, retrieves the 40 most
+semantically relevant lines from Qdrant, then expands those into
+structural episode context from Neo4j. ~3,500 tokens per turn instead
+of 500,000+.
 
 ```
 Your question
@@ -70,6 +120,33 @@ Your question
               Claude Opus → character response
 ```
 
+**Comic book pipeline** (for each panel):
+
+```
+Teleplay scene
+     │
+     ▼
+ PanelScript (dialogue, speakers, line types, speaker positions)
+     │
+     ▼
+ Recraft V4.1 — generate panel art (2K, IDW Mike Johnson style)
+     │
+     ▼
+ MiniMax M3 — vision analysis (face/body/combadge bboxes, empty regions)
+     │
+     ▼
+ Reading-order placer — speaker-anchored balloon positions
+     │   • Klein: balloons above and away from speaker
+     │   • Campbell's Rule #3: reader assigns balloon to nearest face
+     │   • Face protection as hard veto
+     │
+     ▼
+ Balloon renderer — tapered-tail polygons (Comical-JS arcTail pattern)
+     │
+     ▼
+ Page composer — 2x3 grid at 1400px page width (Blambot spec)
+```
+
 ---
 
 ## Prerequisites
@@ -77,7 +154,8 @@ Your question
 - **Python 3.11** (pydantic-core does not build on 3.14+ yet — use pyenv if needed)
 - **Docker** (Docker Desktop on macOS/Windows, Docker Engine on Linux)
 - **git**
-- **Anthropic API key** — get one at [console.anthropic.com](https://console.anthropic.com/)
+- **Anthropic API key** for the story side — get one at [console.anthropic.com](https://console.anthropic.com/)
+- **OpenRouter API key** for the comic side (Recraft V4.1 + MiniMax M3) — get one at [openrouter.ai](https://openrouter.ai/)
 
 ---
 
@@ -92,8 +170,9 @@ cd star-trek-graph
 # Install everything (Python venv + pip + Docker images)
 bash install.sh
 
-# Set your API key
+# Set your API keys
 export ANTHROPIC_API_KEY=sk-ant-...
+export OPENROUTER_API_KEY=sk-or-...   # only needed for the comic pipeline
 
 # Start Neo4j
 docker compose up -d
@@ -109,6 +188,9 @@ docker compose up -d
 
 # Talk to Worf with more context
 ./trek --character WORF --top-k 60
+
+# Generate a comic page (uses cached art if present, ~$1.80 fresh)
+.venv/bin/python scripts/build_page_1.py
 ```
 
 ### Windows
@@ -120,8 +202,9 @@ cd star-trek-graph
 REM Install everything
 install.bat
 
-REM Set your API key (PowerShell)
+REM Set your API keys (PowerShell)
 $env:ANTHROPIC_API_KEY = 'sk-ant-...'
+$env:OPENROUTER_API_KEY = 'sk-or-...'
 
 REM Start Neo4j
 docker compose up -d
@@ -134,16 +217,13 @@ REM Build vector embeddings (first time only, ~7 min on CPU)
 
 REM Talk to Picard
 trek
-
-REM Talk to Data with 60 retrieved lines
-trek --character DATA --top-k 60
 ```
 
 ---
 
 ## Usage
 
-### `./trek` — GraphRAG character chatbot (recommended)
+### `./trek` — GraphRAG character chatbot
 
 ```
 ./trek                                Talk to Picard (default)
@@ -209,35 +289,27 @@ Sonnet for validation and metadata). The teleplay and a JSON
 sidecar with the full outline+metadata are saved to
 `data/generated_episodes/`.
 
-**Three sample episodes ship in the repo, one per series:**
-- [`SAMPLE_TNG_The_Last_Voice_of_Kethani.txt`](data/generated_episodes/SAMPLE_TNG_The_Last_Voice_of_Kethani.txt) — TNG, 50,078 chars
-- [`SAMPLE_TOS_The_Blood_of_Kahless.txt`](data/generated_episodes/SAMPLE_TOS_The_Blood_of_Kahless.txt) — TOS, 48,595 chars
-- [`SAMPLE_DS9_Sins_of_the_Father.txt`](data/generated_episodes/SAMPLE_DS9_Sins_of_the_Father.txt) — DS9, 42,544 chars
+### `scripts/build_page_1.py` — Comic page builder (beta)
 
-### `src/comic/` — Comic book rendering platform (preview)
+Generates the 6-panel Page 1 of "The Last Voice of Kethani" end-to-end.
+Each panel runs through the full pipeline: Recraft V4.1 art generation,
+MiniMax M3 vision analysis, reading-order balloon placement, and 2x3
+grid composition.
 
-A separate pipeline that turns generated teleplays into proper comic
-book pages. Produces panel art via image generation, applies a
-post-processing chain (posterization + line overlay + halftone + grain)
-so the output reads as printed comic rather than AI painting, and lays
-out professional balloons:
+```bash
+# Generate the full page (~$1.80 in OpenRouter spend if no cache)
+.venv/bin/python scripts/build_page_1.py
+```
 
-- Pure-white rounded-rect speech balloons with curved tapered tails
-- Double-outline radio balloons (no tail) with inline `Speaker via Comms:` prefix in red for combadge / viewscreen / intercom (Star Trek IDW convention)
-- Cyan italic caption boxes for Captain's Log entries (IDW Trek convention)
-- ALL CAPS body text in Komika Text (free comic font, ships with the repo)
-- Bangers display font for titles and sound effects
-- Professional grid-based page layouts (4-, 6-, 9-panel; splash; varying tier)
+Output:
+- `data/poc_comic/stage3/PAGE_1.png` — composed page (1400×2165)
+- `data/poc_comic/stage3/p{1-6}_ART.png` — raw Recraft art
+- `data/poc_comic/stage3/p{1-6}_FINAL.png` — art with balloons
 
-Designed against the conventions documented in
-[`docs/COMIC_PRODUCTION.md`](docs/COMIC_PRODUCTION.md) — Blambot's
-industry-standard grammar reference, IDW Star Trek comics, comic
-printer specs.
-
-A POC page from the TNG sample episode is in the repo:
-[`data/poc_comic/SAMPLE_TNG_The_Last_Voice_of_Kethani_PAGE_1.png`](data/poc_comic/SAMPLE_TNG_The_Last_Voice_of_Kethani_PAGE_1.png).
-
-Full multi-page generation + PDF/CBZ export is the v0.5.0 target.
+The page builder is the entry point. Underneath it: `src/comic/imagegen.py`
+(Recraft client), `src/comic/intelligence.py` (vision + placer),
+`src/comic/balloons.py` (renderer), `src/comic/panel_script.py`
+(data model), `src/comic/page.py` (page composer).
 
 ### Ingest scripts
 
@@ -401,9 +473,10 @@ See `docs/PLAN.md` for the full phased roadmap with status. The short version:
 
 - **Phase 1** (done): 5-episode spike, parser, loader, Picard full-context agent
 - **Phase 2** (done): Full TNG corpus, GraphRAG retriever, character_agent
-- **Phase 3**: DS9 + TNG Films, behavioral cards, location normalization
-- **Phase 4**: Voyager, character relationship graph, fan-canon tier
-- **Phase 5**: Multi-agent Episode Writer with canon validation
+- **Phase 3** (done): DS9 + behavioral cards
+- **Phase 4** (done): Multi-agent Episode Writer with canon validation; three sample episodes ship in the repo
+- **Phase 5** (in progress, v0.4.1): Comic book rendering platform — Page 1 done. Next: multi-page rendering, character reference images for likeness consistency, PDF / CBZ export.
+- **Phase 6**: Voyager + Enterprise + TNG Films ingest, character relationship graph, fan-canon tier
 
 ---
 
@@ -421,20 +494,22 @@ this project needs. The workflow:
 7. We discuss, iterate if needed, then merge
 
 For larger changes (new corpora, schema changes, anything touching the
-Episode Writer architecture), **please open an Issue first** so we can
+Episode Writer architecture or the comic pipeline), **please open an Issue first** so we can
 align on approach before you sink time into it.
 
 `main` is protected: PRs require CI to pass and at least one review.
 The repo owner retains bypass for solo housekeeping (doc tweaks,
 version bumps); contributor work goes through PRs. This isn't
 gatekeeping — it's how we keep the release artifacts (sample episodes,
-embedded corpus, validated agents) honest and reproducible.
+embedded corpus, validated agents, rendered comic pages) honest and
+reproducible.
 
 Ideas especially welcome:
 - Voyager / Enterprise / TNG Films ingest
 - Location normalization (`data/location_aliases.yaml`)
 - Behavioral cards for more characters
 - Local-LLM mode for the Episode Writer (Ollama / vLLM)
+- Comic-side: Recraft `reference_image` integration for character likeness; Flux Kontext Pro alternative renderer; PDF / CBZ export
 - A web UI
 - Telegram / Discord bot wrappers
 
@@ -449,11 +524,17 @@ Code: MIT License — see LICENSE.
 **Star Trek IP notice:** Star Trek, The Next Generation, and all character
 names are trademarks and copyright of CBS Studios / Paramount Global.
 This project is a fan work for educational and research purposes only.
-No commercial use. No redistribution of episode scripts.
+No commercial use. No redistribution of episode scripts or generated
+comic pages.
 
 **Script source:** Episode scripts were scraped from
 [st-minutiae.com](https://www.st-minutiae.com/resources/scripts/) with
 respect for their terms of service. Do not redistribute the raw `.txt` files.
+
+**Comic art:** Panel art is generated procedurally by Recraft V4.1 Pro
+via OpenRouter. Generated images are fan-made works for personal /
+educational use only. Character likenesses are property of the
+respective rights holders.
 
 ---
 
@@ -463,8 +544,9 @@ respect for their terms of service. Do not redistribute the raw `.txt` files.
 > **[Hermes Agent](https://hermes-agent.nousresearch.com)** (Nous Research)
 > running Claude Opus on Ubuntu Linux (kernel 7.0.0-15-generic).
 > The architecture, graph schema, parser, loader, embedder, retriever,
-> character agents, and all documentation were generated in a single
-> collaborative session. Author: Eric Stewart.
+> character agents, Episode Writer, comic book rendering pipeline, and
+> all documentation were generated in interactive sessions.
+> Author: Eric Stewart.
 
 Hermes Agent is an AI agent platform by [Nous Research](https://nousresearch.com)
 that lets you work with Claude and other LLMs via a persistent, tool-using agent

@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] — 2026-06-03
+
+**Project repositioning.** Public framing reimagined from "knowledge
+graph + chatbots + Episode Writer" to **"end-to-end Star Trek comic
+book creation platform."** The story-graph is now presented as the
+engine; comic book creation is the headline output. No code changes;
+the v0.4.1 pipeline is the v0.5.0 pipeline.
+
+### Changed — README.md
+- Tagline rewritten to lead with the end-to-end comic creation story.
+- **Page 1 of "The Last Voice of Kethani"** (the v0.4.1 hero artifact
+  at `data/poc_comic/stage3/PAGE_1.png`) inserted at the top of the
+  page immediately after the tagline, with a credit caption pointing
+  to `scripts/build_page_1.py` and `data/COMIC_TECHNIQUES_RESEARCH.md`.
+- New "The platform" section with two side-by-side tables: **Story
+  creation (stable)** and **Comic book creation (beta — v0.5.0)**.
+  Each component links to the relevant module or doc.
+- New "Sample episodes" section promoted near the top — three
+  full-length teleplays with premise + file links + cost-per-episode +
+  cost-to-render-Page-1 numbers.
+- New "How it works" section combines the existing GraphRAG diagram
+  with a new **comic book pipeline ASCII diagram** (PanelScript →
+  Recraft → MiniMax → placer → renderer → composer).
+- Prerequisites: added OpenRouter API key requirement for the comic
+  side (Recraft V4.1 Pro + MiniMax M3).
+- Quickstart: added `scripts/build_page_1.py` to the Linux/macOS flow.
+- Usage: replaced the old `src/comic/` preview blurb (which described
+  the Stage 1 spike) with a proper `scripts/build_page_1.py` —
+  Comic page builder (beta)" subsection.
+- Roadmap: Phase 3 (DS9 + behavioral cards) and Phase 4 (Episode
+  Writer with three sample episodes) marked done; Phase 5 inserted
+  as "Comic book rendering platform — Page 1 done. Next: multi-page
+  rendering, character reference images for likeness consistency,
+  PDF / CBZ export"; Phase 6 = Voyager + relationship graph.
+- License & Attribution: added redistribution restriction for comic
+  pages; new paragraph on Recraft-generated panel art.
+- Bottom "Built with Hermes" block: updated to mention comic book
+  rendering pipeline + multiple sessions (was "single session").
+- Version badge bumped 0.4.1 → 0.5.0.
+
+### Code
+- `src/config.py`: `__version__` bumped 0.4.1 → 0.5.0.
+
+### Not changed
+- Pipeline code, tests, sample episodes, Page 1 render. v0.5.0 is a
+  framing release, not a feature release. The v0.4.1 entry below
+  documents the actual pipeline shipped.
+
 ## [0.4.1] — 2026-06-02
 
 Page 1 of "The Last Voice of Kethani" — full 6-panel page from script
